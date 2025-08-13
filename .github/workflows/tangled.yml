@@ -1,0 +1,14 @@
+name: Tangle
+
+on:
+  push: {}
+  workflow_dispatch: {}
+
+jobs:
+  tangle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: gwennlbh/to-tangled@v0.3
+        with:
+          repo: isuggest.selfce.st/catsky-social
+          ssh-key: ${{ secrets.TANGLED_KEY }}
