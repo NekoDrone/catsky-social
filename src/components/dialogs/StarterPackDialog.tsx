@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React from 'react'
+=======
+import {useCallback, useState} from 'react'
+>>>>>>> upstream/main
 import {View} from 'react-native'
 import {
   type AppBskyGraphGetStarterPacksWithMembership,
@@ -22,6 +26,7 @@ import {
 } from '#/state/queries/list-memberships'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+<<<<<<< HEAD
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
@@ -32,6 +37,18 @@ import {AvatarStack} from '../AvatarStack'
 import {PlusLarge_Stroke2_Corner0_Rounded} from '../icons/Plus'
 import {StarterPack} from '../icons/StarterPack'
 import {TimesLarge_Stroke2_Corner0_Rounded} from '../icons/Times'
+=======
+import {AvatarStack} from '#/components/AvatarStack'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {Divider} from '#/components/Divider'
+import {PlusLarge_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
+import {StarterPack} from '#/components/icons/StarterPack'
+import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import * as bsky from '#/types/bsky'
+>>>>>>> upstream/main
 
 type StarterPackWithMembership =
   AppBskyGraphGetStarterPacksWithMembership.StarterPackWithMembership
@@ -51,7 +68,11 @@ export function StarterPackDialog({
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
 
+<<<<<<< HEAD
   const navToWizard = React.useCallback(() => {
+=======
+  const navToWizard = useCallback(() => {
+>>>>>>> upstream/main
     control.close()
     navigation.navigate('StarterPackWizard', {
       fromDialog: true,
@@ -91,7 +112,10 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
   const {_} = useLingui()
   const t = useTheme()
 
+<<<<<<< HEAD
   isWeb
+=======
+>>>>>>> upstream/main
   return (
     <View style={[a.gap_2xl, {paddingTop: isWeb ? 100 : 64}]}>
       <View style={[a.gap_xs, a.align_center]}>
@@ -115,7 +139,11 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
               Create
             </Trans>
           </ButtonText>
+<<<<<<< HEAD
           <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
+=======
+          <ButtonIcon icon={PlusIcon} />
+>>>>>>> upstream/main
         </Button>
       </View>
     </View>
@@ -134,7 +162,10 @@ function StarterPackList({
   enabled?: boolean
 }) {
   const {_} = useLingui()
+<<<<<<< HEAD
   const t = useTheme()
+=======
+>>>>>>> upstream/main
 
   const {
     data,
@@ -149,7 +180,11 @@ function StarterPackList({
   const membershipItems =
     data?.pages.flatMap(page => page.starterPacksWithMembership) || []
 
+<<<<<<< HEAD
   const _onRefresh = React.useCallback(async () => {
+=======
+  const _onRefresh = useCallback(async () => {
+>>>>>>> upstream/main
     try {
       await refetch()
     } catch (err) {
@@ -157,7 +192,11 @@ function StarterPackList({
     }
   }, [refetch])
 
+<<<<<<< HEAD
   const _onEndReached = React.useCallback(async () => {
+=======
+  const _onEndReached = useCallback(async () => {
+>>>>>>> upstream/main
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()
@@ -166,13 +205,18 @@ function StarterPackList({
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
+<<<<<<< HEAD
   const renderItem = React.useCallback(
+=======
+  const renderItem = useCallback(
+>>>>>>> upstream/main
     ({item}: {item: StarterPackWithMembership}) => (
       <StarterPackItem starterPackWithMembership={item} targetDid={targetDid} />
     ),
     [targetDid],
   )
 
+<<<<<<< HEAD
   const onClose = React.useCallback(() => {
     control.close()
   }, [control])
@@ -185,6 +229,12 @@ function StarterPackList({
     )
   }, [t])
 
+=======
+  const onClose = useCallback(() => {
+    control.close()
+  }, [control])
+
+>>>>>>> upstream/main
   const listHeader = (
     <>
       <View
@@ -196,8 +246,19 @@ function StarterPackList({
         <Text style={[a.text_lg, a.font_bold]}>
           <Trans>Add to starter packs</Trans>
         </Text>
+<<<<<<< HEAD
         <Button label={_(msg`Close`)} onPress={onClose}>
           <ButtonIcon icon={() => XIcon} />
+=======
+        <Button
+          label={_(msg`Close`)}
+          onPress={onClose}
+          variant="ghost"
+          color="secondary"
+          size="small"
+          shape="round">
+          <ButtonIcon icon={XIcon} />
+>>>>>>> upstream/main
         </Button>
       </View>
       {membershipItems.length > 0 && (
@@ -217,7 +278,11 @@ function StarterPackList({
                   Create
                 </Trans>
               </ButtonText>
+<<<<<<< HEAD
               <ButtonIcon icon={PlusLarge_Stroke2_Corner0_Rounded} />
+=======
+              <ButtonIcon icon={PlusIcon} />
+>>>>>>> upstream/main
             </Button>
           </View>
           <Divider />
@@ -268,7 +333,11 @@ function StarterPackItem({
   const starterPack = starterPackWithMembership.starterPack
   const isInPack = !!starterPackWithMembership.listItem
 
+<<<<<<< HEAD
   const [isPendingRefresh, setIsPendingRefresh] = React.useState(false)
+=======
+  const [isPendingRefresh, setIsPendingRefresh] = useState(false)
+>>>>>>> upstream/main
 
   const {mutate: addMembership} = useListMembershipAddMutation({
     onSuccess: () => {

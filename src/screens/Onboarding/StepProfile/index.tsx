@@ -266,7 +266,11 @@ export function StepProfile() {
         </View>
 
         <OnboardingControls.Portal>
+<<<<<<< HEAD
           <View style={[a.gap_md, gtMobile && {flexDirection: 'row-reverse'}]}>
+=======
+          <View style={[a.gap_md, gtMobile && a.flex_row_reverse]}>
+>>>>>>> upstream/main
             <Button
               variant="solid"
               color="primary"

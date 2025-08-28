@@ -90,6 +90,16 @@ export type MetricEvents = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+<<<<<<< HEAD
+=======
+  'onboarding:suggestedAccounts:tabPressed': {
+    tab: string
+  }
+  'onboarding:suggestedAccounts:followAllPressed': {
+    tab: string
+    numAccounts: number
+  }
+>>>>>>> upstream/main
   'onboarding:suggestedAccounts:nextPressed': {
     selectedAccountsLength: number
     skipped: boolean
@@ -118,6 +128,12 @@ export type MetricEvents = {
   'onboarding:finished:avatarResult': {
     avatarResult: 'default' | 'created' | 'uploaded'
   }
+<<<<<<< HEAD
+=======
+  'onboarding:valueProp:stepOne:nextPressed': {}
+  'onboarding:valueProp:stepTwo:nextPressed': {}
+  'onboarding:valueProp:skipPressed': {}
+>>>>>>> upstream/main
   'home:feedDisplayed': {
     feedUrl: string
     feedType: string
@@ -242,6 +258,10 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+<<<<<<< HEAD
+=======
+      | 'OnboardingSuggestedAccounts'
+>>>>>>> upstream/main
   }
   'suggestedUser:follow': {
     logContext:
@@ -249,12 +269,24 @@ export type MetricEvents = {
       | 'InterstitialDiscover'
       | 'InterstitialProfile'
       | 'Profile'
+<<<<<<< HEAD
+=======
+      | 'Onboarding'
+>>>>>>> upstream/main
     location: 'Card' | 'Profile'
     recId?: number
     position: number
   }
   'suggestedUser:press': {
+<<<<<<< HEAD
     logContext: 'Explore' | 'InterstitialDiscover' | 'InterstitialProfile'
+=======
+    logContext:
+      | 'Explore'
+      | 'InterstitialDiscover'
+      | 'InterstitialProfile'
+      | 'Onboarding'
+>>>>>>> upstream/main
     recId?: number
     position: number
   }
@@ -280,6 +312,10 @@ export type MetricEvents = {
       | 'PostOnboardingFindFollows'
       | 'ImmersiveVideo'
       | 'ExploreSuggestedAccounts'
+<<<<<<< HEAD
+=======
+      | 'OnboardingSuggestedAccounts'
+>>>>>>> upstream/main
   }
   'chat:create': {
     logContext: 'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog'

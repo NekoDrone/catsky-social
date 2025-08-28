@@ -1,13 +1,27 @@
+<<<<<<< HEAD
 import React from 'react'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
+=======
+import {useMemo, useReducer} from 'react'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useGate} from '#/lib/statsig/statsig'
+import {
+  Layout,
+  OnboardingControls,
+  OnboardingHeaderSlot,
+} from '#/screens/Onboarding/Layout'
+>>>>>>> upstream/main
 import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepProfile} from '#/screens/Onboarding/StepProfile'
 import {Portal} from '#/components/Portal'
+<<<<<<< HEAD
 
 export function Onboarding() {
   const {_} = useLingui()
@@ -16,6 +30,25 @@ export function Onboarding() {
   })
 
   const interestsDisplayNames = React.useMemo(() => {
+=======
+import {StepSuggestedAccounts} from './StepSuggestedAccounts'
+
+export function Onboarding() {
+  const {_} = useLingui()
+  const gate = useGate()
+  const showValueProp = gate('onboarding_value_prop')
+  const showSuggestedAccounts = gate('onboarding_suggested_accounts')
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    totalSteps: showSuggestedAccounts ? 4 : 3,
+    experiments: {
+      onboarding_suggested_accounts: showSuggestedAccounts,
+      onboarding_value_prop: showValueProp,
+    },
+  })
+
+  const interestsDisplayNames = useMemo(() => {
+>>>>>>> upstream/main
     return {
       news: _(msg`News`),
       journalism: _(msg`Journalism`),
@@ -45,6 +78,7 @@ export function Onboarding() {
   return (
     <Portal>
       <OnboardingControls.Provider>
+<<<<<<< HEAD
         <Context.Provider
           value={React.useMemo(
             () => ({state, dispatch, interestsDisplayNames}),
@@ -56,6 +90,24 @@ export function Onboarding() {
             {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>
+=======
+        <OnboardingHeaderSlot.Provider>
+          <Context.Provider
+            value={useMemo(
+              () => ({state, dispatch, interestsDisplayNames}),
+              [state, dispatch, interestsDisplayNames],
+            )}>
+            <Layout>
+              {state.activeStep === 'profile' && <StepProfile />}
+              {state.activeStep === 'interests' && <StepInterests />}
+              {state.activeStep === 'suggested-accounts' && (
+                <StepSuggestedAccounts />
+              )}
+              {state.activeStep === 'finished' && <StepFinished />}
+            </Layout>
+          </Context.Provider>
+        </OnboardingHeaderSlot.Provider>
+>>>>>>> upstream/main
       </OnboardingControls.Provider>
     </Portal>
   )

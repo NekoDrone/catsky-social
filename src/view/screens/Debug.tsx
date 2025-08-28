@@ -4,17 +4,29 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
+<<<<<<< HEAD
 import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+=======
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {type PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+>>>>>>> upstream/main
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {Button} from '#/view/com/util/forms/Button'
+<<<<<<< HEAD
 import {
   DropdownButton,
   DropdownItem,
 } from '#/view/com/util/forms/DropdownButton'
+=======
+>>>>>>> upstream/main
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import * as LoadingPlaceholder from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
@@ -134,8 +146,11 @@ function ControlsView() {
     <ScrollView style={[s.pl10, s.pr10]}>
       <Heading label="Buttons" />
       <ButtonsView />
+<<<<<<< HEAD
       <Heading label="Dropdown Buttons" />
       <DropdownButtonsView />
+=======
+>>>>>>> upstream/main
       <Heading label="Toggle Buttons" />
       <ToggleButtonsView />
       <View style={s.footerSpacer} />
@@ -396,6 +411,7 @@ function ButtonsView() {
   )
 }
 
+<<<<<<< HEAD
 const DROPDOWN_ITEMS: DropdownItem[] = [
   {
     icon: ['far', 'paste'],
@@ -434,6 +450,8 @@ function DropdownButtonsView() {
   )
 }
 
+=======
+>>>>>>> upstream/main
 function ToggleButtonsView() {
   const defaultPal = usePalette('default')
   const buttonStyles = s.mb5

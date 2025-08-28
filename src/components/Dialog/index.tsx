@@ -12,9 +12,19 @@ import {
 import {
   KeyboardAwareScrollView,
   useKeyboardHandler,
+<<<<<<< HEAD
 } from 'react-native-keyboard-controller'
 import {runOnJS} from 'react-native-reanimated'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
+=======
+  useReanimatedKeyboardAnimation,
+} from 'react-native-keyboard-controller'
+import Animated, {
+  runOnJS,
+  type ScrollEvent,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
+>>>>>>> upstream/main
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -26,7 +36,11 @@ import {isAndroid, isIOS} from '#/platform/detection'
 import {useA11y} from '#/state/a11y'
 import {useDialogStateControlContext} from '#/state/dialogs'
 import {List, type ListMethods, type ListProps} from '#/view/com/util/List'
+<<<<<<< HEAD
 import {atoms as a, tokens, useTheme} from '#/alf'
+=======
+import {atoms as a, ios, platform, tokens, useTheme} from '#/alf'
+>>>>>>> upstream/main
 import {useThemeName} from '#/alf/util/useColorModeTheme'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 import {
@@ -256,6 +270,10 @@ export const ScrollableInner = React.forwardRef<ScrollView, DialogInnerProps>(
           contentContainerStyle,
         ]}
         ref={ref}
+<<<<<<< HEAD
+=======
+        showsVerticalScrollIndicator={isAndroid ? false : undefined}
+>>>>>>> upstream/main
         {...props}
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         bottomOffset={30}
@@ -275,12 +293,24 @@ export const InnerFlatList = React.forwardRef<
   ListProps<any> & {
     webInnerStyle?: StyleProp<ViewStyle>
     webInnerContentContainerStyle?: StyleProp<ViewStyle>
+<<<<<<< HEAD
   }
 >(function InnerFlatList({style, ...props}, ref) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
 
   const onScroll = (e: ReanimatedScrollEvent) => {
+=======
+    footer?: React.ReactNode
+  }
+>(function InnerFlatList({footer, style, ...props}, ref) {
+  const insets = useSafeAreaInsets()
+  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+
+  useEnableKeyboardController(isIOS)
+
+  const onScroll = (e: ScrollEvent) => {
+>>>>>>> upstream/main
     'worklet'
     if (!isAndroid) {
       return
@@ -300,13 +330,63 @@ export const InnerFlatList = React.forwardRef<
         bounces={nativeSnapPoint === BottomSheetSnapPoint.Full}
         ListFooterComponent={<View style={{height: insets.bottom + 100}} />}
         ref={ref}
+<<<<<<< HEAD
         {...props}
         style={[style]}
       />
+=======
+        showsVerticalScrollIndicator={isAndroid ? false : undefined}
+        {...props}
+        style={[a.h_full, style]}
+      />
+      {footer}
+>>>>>>> upstream/main
     </ScrollProvider>
   )
 })
 
+<<<<<<< HEAD
+=======
+export function FlatListFooter({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  const {top, bottom} = useSafeAreaInsets()
+  const {height} = useReanimatedKeyboardAnimation()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    if (!isIOS) return {}
+    return {
+      transform: [{translateY: Math.min(0, height.get() + bottom - 10)}],
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        a.absolute,
+        a.bottom_0,
+        a.w_full,
+        a.z_10,
+        a.border_t,
+        t.atoms.bg,
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.pt_md,
+        {
+          paddingBottom: platform({
+            ios: tokens.space.md + bottom,
+            android: tokens.space.md + bottom + top,
+          }),
+        },
+        // TODO: had to admit defeat here, but we should
+        // try and get this to work for Android as well -sfn
+        ios(animatedStyle),
+      ]}>
+      {children}
+    </Animated.View>
+  )
+}
+
+>>>>>>> upstream/main
 export function Handle({difference = false}: {difference?: boolean}) {
   const t = useTheme()
   const {_} = useLingui()

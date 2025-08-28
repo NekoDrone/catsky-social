@@ -11,6 +11,10 @@ import {useInterestsDisplayNames} from '#/screens/Onboarding/state'
 export function useSuggestedUsers({
   category = null,
   search = false,
+<<<<<<< HEAD
+=======
+  overrideInterests,
+>>>>>>> upstream/main
 }: {
   category?: string | null
   /**
@@ -18,11 +22,23 @@ export function useSuggestedUsers({
    * based on the user's "app language setting
    */
   search?: boolean
+<<<<<<< HEAD
+=======
+  /**
+   * In onboarding, interests haven't been saved to prefs yet, so we need to
+   * pass them down through here
+   */
+  overrideInterests?: string[]
+>>>>>>> upstream/main
 }) {
   const interestsDisplayNames = useInterestsDisplayNames()
   const curated = useGetSuggestedUsersQuery({
     enabled: !search,
     category,
+<<<<<<< HEAD
+=======
+    overrideInterests,
+>>>>>>> upstream/main
   })
   const searched = useActorSearchPaginated({
     enabled: !!search,
@@ -43,6 +59,10 @@ export function useSuggestedUsers({
         isLoading: searched.isLoading,
         error: searched.error,
         isRefetching: searched.isRefetching,
+<<<<<<< HEAD
+=======
+        refetch: searched.refetch,
+>>>>>>> upstream/main
       }
     } else {
       return {
@@ -50,6 +70,10 @@ export function useSuggestedUsers({
         isLoading: curated.isLoading,
         error: curated.error,
         isRefetching: curated.isRefetching,
+<<<<<<< HEAD
+=======
+        refetch: curated.refetch,
+>>>>>>> upstream/main
       }
     }
   }, [curated, searched, search])

@@ -44,7 +44,16 @@ export function Screen() {
                 <InlineLinkText
                   overridePresentation
                   to={urls.website.blog.initialVerificationAnnouncement}
+<<<<<<< HEAD
                   label={_(msg`Learn more`)}
+=======
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
+>>>>>>> upstream/main
                   onPress={() => {
                     logger.metric(
                       'verification:learn-more',

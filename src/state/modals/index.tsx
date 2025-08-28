@@ -35,10 +35,13 @@ export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
 
+<<<<<<< HEAD
 export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
+=======
+>>>>>>> upstream/main
 /**
  * @deprecated DO NOT ADD NEW MODALS
  */
@@ -48,7 +51,10 @@ export type Modal =
 
   // Curation
   | ContentLanguagesSettingsModal
+<<<<<<< HEAD
   | PostLanguagesSettingsModal
+=======
+>>>>>>> upstream/main
 
   // Lists
   | CreateOrEditListModal

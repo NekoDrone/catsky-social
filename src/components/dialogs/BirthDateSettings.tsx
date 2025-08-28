@@ -4,11 +4,16 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {cleanError} from '#/lib/strings/errors'
+<<<<<<< HEAD
 import {getDateAgo} from '#/lib/strings/time'
+=======
+import {getAge, getDateAgo} from '#/lib/strings/time'
+>>>>>>> upstream/main
 import {logger} from '#/logger'
 import {isIOS, isWeb} from '#/platform/detection'
 import {
   usePreferencesQuery,
+<<<<<<< HEAD
   UsePreferencesQueryResponse,
   usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
@@ -19,6 +24,20 @@ import {DateField} from '#/components/forms/DateField'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '../Button'
+=======
+  type UsePreferencesQueryResponse,
+  usePreferencesSetBirthDateMutation,
+} from '#/state/queries/preferences'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
+import {atoms as a, useTheme, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {DateField} from '#/components/forms/DateField'
+import {InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+>>>>>>> upstream/main
 
 export function BirthDateSettingsDialog({
   control,
@@ -32,6 +51,7 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
+<<<<<<< HEAD
       <Dialog.ScrollableInner label={_(msg`My Birthday`)}>
         <View style={[a.gap_sm, a.pb_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>
@@ -57,6 +77,37 @@ export function BirthDateSettingsDialog({
         ) : (
           <BirthdayInner control={control} preferences={preferences} />
         )}
+=======
+      <Dialog.ScrollableInner
+        label={_(msg`My Birthday`)}
+        style={web({maxWidth: 400})}>
+        <View style={[a.gap_sm]}>
+          <Text style={[a.text_xl, a.font_bold]}>
+            <Trans>My Birthday</Trans>
+          </Text>
+          <Text style={[a.leading_snug, t.atoms.text_contrast_medium]}>
+            <Trans>
+              This information is private and not shared with other users.
+            </Trans>
+          </Text>
+
+          {isLoading ? (
+            <Loader size="xl" />
+          ) : error || !preferences ? (
+            <ErrorMessage
+              message={
+                error?.toString() ||
+                _(
+                  msg`We were unable to load your birth date preferences. Please try again.`,
+                )
+              }
+              style={[a.rounded_sm]}
+            />
+          ) : (
+            <BirthdayInner control={control} preferences={preferences} />
+          )}
+        </View>
+>>>>>>> upstream/main
 
         <Dialog.Close />
       </Dialog.ScrollableInner>
@@ -72,7 +123,13 @@ function BirthdayInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
+<<<<<<< HEAD
   const [date, setDate] = React.useState(preferences.birthDate || new Date())
+=======
+  const [date, setDate] = React.useState(
+    preferences.birthDate || getDateAgo(18),
+  )
+>>>>>>> upstream/main
   const {
     isPending,
     isError,
@@ -81,6 +138,13 @@ function BirthdayInner({
   } = usePreferencesSetBirthDateMutation()
   const hasChanged = date !== preferences.birthDate
 
+<<<<<<< HEAD
+=======
+  const age = getAge(new Date(date))
+  const isUnder13 = age < 13
+  const isUnder18 = age >= 13 && age < 18
+
+>>>>>>> upstream/main
   const onSave = React.useCallback(async () => {
     try {
       // skip if date is the same
@@ -102,10 +166,39 @@ function BirthdayInner({
           onChangeDate={newDate => setDate(new Date(newDate))}
           label={_(msg`Birthday`)}
           accessibilityHint={_(msg`Enter your birth date`)}
+<<<<<<< HEAD
           maximumDate={getDateAgo(13)}
         />
       </View>
 
+=======
+        />
+      </View>
+
+      {isUnder18 && hasChanged && (
+        <Admonition type="info">
+          <Trans>
+            The birthdate you've entered means you are under 18 years old.
+            Certain content and features may be unavailable to you.
+          </Trans>
+        </Admonition>
+      )}
+
+      {isUnder13 && (
+        <Admonition type="error">
+          <Trans>
+            You must be at least 13 years old to use Bluesky. Read our{' '}
+            <InlineLinkText
+              to="https://bsky.social/about/support/tos"
+              label={_(msg`Terms of Service`)}>
+              Terms of Service
+            </InlineLinkText>{' '}
+            for more information.
+          </Trans>
+        </Admonition>
+      )}
+
+>>>>>>> upstream/main
       {isError ? (
         <ErrorMessage message={cleanError(error)} style={[a.rounded_sm]} />
       ) : undefined}
@@ -116,7 +209,12 @@ function BirthdayInner({
           size="large"
           onPress={onSave}
           variant="solid"
+<<<<<<< HEAD
           color="primary">
+=======
+          color="primary"
+          disabled={isUnder13}>
+>>>>>>> upstream/main
           <ButtonText>
             {hasChanged ? <Trans>Save</Trans> : <Trans>Done</Trans>}
           </ButtonText>

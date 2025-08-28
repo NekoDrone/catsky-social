@@ -347,9 +347,20 @@ function DialogInner({
                 You are verified. You will lose your verification status if you
                 change your display name.{' '}
                 <InlineLinkText
+<<<<<<< HEAD
                   label={_(msg`Learn more`)}
                   to={urls.website.blog.initialVerificationAnnouncement}>
                   <Trans>Learn more.</Trans>
+=======
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
+                  to={urls.website.blog.initialVerificationAnnouncement}>
+                  <Trans context="english-only-resource">Learn more.</Trans>
+>>>>>>> upstream/main
                 </InlineLinkText>
               </Trans>
             </Admonition>
