@@ -1,9 +1,17 @@
 import {
+<<<<<<< HEAD
   $Typed,
   AppBskyGraphFollow,
   AppBskyGraphGetFollows,
   BskyAgent,
   ComAtprotoRepoApplyWrites,
+=======
+  type $Typed,
+  type AppBskyGraphFollow,
+  type AppBskyGraphGetFollows,
+  type BskyAgent,
+  type ComAtprotoRepoApplyWrites,
+>>>>>>> upstream/main
 } from '@atproto/api'
 import {TID} from '@atproto/common-web'
 import chunk from 'lodash.chunk'
@@ -42,10 +50,17 @@ export async function bulkWriteFollows(agent: BskyAgent, dids: string[]) {
   }
   await whenFollowsIndexed(agent, session.did, res => !!res.data.follows.length)
 
+<<<<<<< HEAD
   const followUris = new Map()
   for (const r of followWrites) {
     followUris.set(
       r.value.subject,
+=======
+  const followUris = new Map<string, string>()
+  for (const r of followWrites) {
+    followUris.set(
+      r.value.subject as string,
+>>>>>>> upstream/main
       `at://${session.did}/app.bsky.graph.follow/${r.rkey}`,
     )
   }

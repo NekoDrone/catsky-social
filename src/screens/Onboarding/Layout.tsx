@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import React from 'react'
+=======
+import React, {useState} from 'react'
+>>>>>>> upstream/main
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg} from '@lingui/macro'
@@ -11,13 +15,19 @@ import {
   atoms as a,
   flatten,
   native,
+<<<<<<< HEAD
   TextStyleProp,
+=======
+  type TextStyleProp,
+  tokens,
+>>>>>>> upstream/main
   useBreakpoints,
   useTheme,
   web,
 } from '#/alf'
 import {leading} from '#/alf/typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+<<<<<<< HEAD
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
@@ -25,6 +35,17 @@ import {P, Text} from '#/components/Typography'
 const COL_WIDTH = 420
 
 export const OnboardingControls = createPortalGroup()
+=======
+import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons/Arrow'
+import {HEADER_SLOT_SIZE} from '#/components/Layout'
+import {createPortalGroup} from '#/components/Portal'
+import {P, Text} from '#/components/Typography'
+
+const ONBOARDING_COL_WIDTH = 420
+
+export const OnboardingControls = createPortalGroup()
+export const OnboardingHeaderSlot = createPortalGroup()
+>>>>>>> upstream/main
 
 export function Layout({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
@@ -46,6 +67,11 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const paddingTop = gtMobile ? a.py_5xl : a.py_lg
   const dialogLabel = _(msg`Set up your account`)
 
+<<<<<<< HEAD
+=======
+  const [footerHeight, setFooterHeight] = useState(0)
+
+>>>>>>> upstream/main
   return (
     <View
       aria-modal
@@ -62,6 +88,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         t.atoms.bg,
       ]}>
       {__DEV__ && (
+<<<<<<< HEAD
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
           <Button
             variant="ghost"
@@ -80,11 +107,42 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           style={[
             web(a.fixed),
             native(a.absolute),
+=======
+        <Button
+          variant="ghost"
+          color="negative"
+          size="tiny"
+          onPress={() => onboardDispatch({type: 'skip'})}
+          // DEV ONLY
+          label="Clear onboarding state"
+          style={[
+            a.absolute,
+            a.z_10,
+            {
+              left: '50%',
+              top: insets.top + 2,
+              transform: [{translateX: '-50%'}],
+            },
+          ]}>
+          <ButtonText>[DEV] Clear</ButtonText>
+        </Button>
+      )}
+
+      {!gtMobile && (
+        <View
+          pointerEvents="box-none"
+          style={[
+            web(a.fixed),
+            native(a.absolute),
+            a.left_0,
+            a.right_0,
+>>>>>>> upstream/main
             a.flex_row,
             a.w_full,
             a.justify_center,
             a.z_20,
             a.px_xl,
+<<<<<<< HEAD
             {
               top: paddingTop.paddingTop + insets.top - 1,
             },
@@ -101,6 +159,36 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               onPress={() => dispatch({type: 'prev'})}>
               <ButtonIcon icon={ChevronLeft} />
             </Button>
+=======
+            {top: paddingTop.paddingTop + insets.top - 1},
+          ]}>
+          <View
+            pointerEvents="box-none"
+            style={[
+              a.w_full,
+              a.align_start,
+              a.flex_row,
+              a.justify_between,
+              {maxWidth: ONBOARDING_COL_WIDTH},
+            ]}>
+            {state.hasPrev ? (
+              <Button
+                key={state.activeStep} // remove focus state on nav
+                color="secondary"
+                variant="ghost"
+                shape="square"
+                size="small"
+                label={_(msg`Go back to previous step`)}
+                onPress={() => dispatch({type: 'prev'})}
+                style={[a.bg_transparent]}>
+                <ButtonIcon icon={ArrowLeft} size="lg" />
+              </Button>
+            ) : (
+              <View />
+            )}
+
+            <OnboardingHeaderSlot.Outlet />
+>>>>>>> upstream/main
           </View>
         </View>
       )}
@@ -109,22 +197,40 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}
+<<<<<<< HEAD
         // @ts-ignore web only --prf
         dataSet={{'stable-gutters': 1}}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
+=======
+        scrollIndicatorInsets={{bottom: footerHeight - insets.bottom}}
+        // @ts-expect-error web only --prf
+        dataSet={{'stable-gutters': 1}}>
+        <View
+          style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
+          <View style={[a.flex_1, {maxWidth: ONBOARDING_COL_WIDTH}]}>
+>>>>>>> upstream/main
             <View style={[a.w_full, a.align_center, paddingTop]}>
               <View
                 style={[
                   a.flex_row,
                   a.gap_sm,
                   a.w_full,
+<<<<<<< HEAD
                   {paddingTop: 17, maxWidth: '60%'},
                 ]}>
                 {Array(state.totalSteps)
                   .fill(0)
                   .map((_, i) => (
+=======
+                  a.align_center,
+                  {height: HEADER_SLOT_SIZE, maxWidth: '60%'},
+                ]}>
+                {Array(state.totalSteps)
+                  .fill(0)
+                  .map((__, i) => (
+>>>>>>> upstream/main
                     <View
                       key={i}
                       style={[
@@ -144,19 +250,30 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
+<<<<<<< HEAD
             <View
               style={[a.w_full, a.mb_5xl, {paddingTop: gtMobile ? 20 : 40}]}>
               {children}
             </View>
 
             <View style={{height: 400}} />
+=======
+            <View style={[a.w_full, a.mb_5xl, a.pt_md]}>{children}</View>
+
+            <View style={{height: 100 + footerHeight}} />
+>>>>>>> upstream/main
           </View>
         </View>
       </ScrollView>
 
       <View
+<<<<<<< HEAD
         style={[
           // @ts-ignore web only -prf
+=======
+        onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
+        style={[
+>>>>>>> upstream/main
           isWeb ? a.fixed : a.absolute,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
@@ -167,20 +284,31 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           isWeb
             ? a.py_2xl
             : {
+<<<<<<< HEAD
                 paddingTop: a.pt_lg.paddingTop,
                 paddingBottom: insets.bottom + 10,
+=======
+                paddingTop: tokens.space.md,
+                paddingBottom: insets.bottom + tokens.space.md,
+>>>>>>> upstream/main
               },
         ]}>
         <View
           style={[
             a.w_full,
+<<<<<<< HEAD
             {maxWidth: COL_WIDTH},
             gtMobile && [a.flex_row, a.justify_between],
+=======
+            {maxWidth: ONBOARDING_COL_WIDTH},
+            gtMobile && [a.flex_row, a.justify_between, a.align_center],
+>>>>>>> upstream/main
           ]}>
           {gtMobile &&
             (state.hasPrev ? (
               <Button
                 key={state.activeStep} // remove focus state on nav
+<<<<<<< HEAD
                 variant="solid"
                 color="secondary"
                 size="large"
@@ -191,6 +319,18 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </Button>
             ) : (
               <View style={{height: 54}} />
+=======
+                color="secondary"
+                variant="ghost"
+                shape="square"
+                size="small"
+                label={_(msg`Go back to previous step`)}
+                onPress={() => dispatch({type: 'prev'})}>
+                <ButtonIcon icon={ArrowLeft} size="lg" />
+              </Button>
+            ) : (
+              <View style={{height: 33}} />
+>>>>>>> upstream/main
             ))}
           <OnboardingControls.Outlet />
         </View>

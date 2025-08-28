@@ -70,9 +70,27 @@ export const atoms = {
   overflow_visible: {
     overflow: 'visible',
   },
+<<<<<<< HEAD
   overflow_hidden: {
     overflow: 'hidden',
   },
+=======
+  overflow_x_visible: {
+    overflowX: 'visible',
+  },
+  overflow_y_visible: {
+    overflowY: 'visible',
+  },
+  overflow_hidden: {
+    overflow: 'hidden',
+  },
+  overflow_x_hidden: {
+    overflowX: 'hidden',
+  },
+  overflow_y_hidden: {
+    overflowY: 'hidden',
+  },
+>>>>>>> upstream/main
   /**
    * @platform web
    */
@@ -363,6 +381,17 @@ export const atoms = {
   border_r_0: {
     borderRightWidth: 0,
   },
+<<<<<<< HEAD
+=======
+  border_x_0: {
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+  },
+  border_y_0: {
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+  },
+>>>>>>> upstream/main
   border: {
     borderWidth: StyleSheet.hairlineWidth,
   },
@@ -378,6 +407,17 @@ export const atoms = {
   border_r: {
     borderRightWidth: StyleSheet.hairlineWidth,
   },
+<<<<<<< HEAD
+=======
+  border_x: {
+    borderLeftWidth: StyleSheet.hairlineWidth,
+    borderRightWidth: StyleSheet.hairlineWidth,
+  },
+  border_y: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+>>>>>>> upstream/main
   border_transparent: {
     borderColor: 'transparent',
   },
@@ -988,6 +1028,12 @@ export const atoms = {
   block: web({
     display: 'block',
   }),
+<<<<<<< HEAD
+=======
+  contents: web({
+    display: 'contents',
+  }),
+>>>>>>> upstream/main
 
   /*
    * Transition

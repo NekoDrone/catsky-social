@@ -1,5 +1,9 @@
 import React from 'react'
+<<<<<<< HEAD
 import {Pressable, View, type ViewStyle} from 'react-native'
+=======
+import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
+>>>>>>> upstream/main
 import Animated, {LinearTransition} from 'react-native-reanimated'
 
 import {HITSLOP_10} from '#/lib/constants'
@@ -59,6 +63,10 @@ export type GroupProps = React.PropsWithChildren<{
   disabled?: boolean
   onChange: (value: string[]) => void
   label: string
+<<<<<<< HEAD
+=======
+  style?: StyleProp<ViewStyle>
+>>>>>>> upstream/main
 }>
 
 export type ItemProps = ViewStyleProp & {
@@ -84,6 +92,10 @@ export function Group({
   type = 'checkbox',
   maxSelections,
   label,
+<<<<<<< HEAD
+=======
+  style,
+>>>>>>> upstream/main
 }: GroupProps) {
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
   const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
@@ -136,7 +148,11 @@ export function Group({
   return (
     <GroupContext.Provider value={context}>
       <View
+<<<<<<< HEAD
         style={[a.w_full]}
+=======
+        style={[a.w_full, style]}
+>>>>>>> upstream/main
         role={groupRole}
         {...(groupRole === 'radiogroup'
           ? {

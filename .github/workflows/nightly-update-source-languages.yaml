@@ -1,7 +1,11 @@
 name: Nightly Update Source Languages
 on:
   schedule:
+<<<<<<< HEAD
     - cron: '0 0 * * *' # run at 12 AM UTC
+=======
+    - cron: '0 2 * * *' # run at 2 AM UTC
+>>>>>>> upstream/main
   workflow_dispatch:
 
 jobs:
@@ -34,7 +38,11 @@ jobs:
       - name: Create commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
+<<<<<<< HEAD
           commit_message: 'chore: nightly source-language update'
+=======
+          commit_message: Nightly source-language update
+>>>>>>> upstream/main
           file_pattern: ./src/locale/locales/en/messages.po
       - name: Push source lang to Crowdin
         uses: crowdin/github-action@v2
@@ -46,4 +54,8 @@ jobs:
           push_sources: false
           create_pull_request: false
         env:
+<<<<<<< HEAD
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+=======
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+>>>>>>> upstream/main

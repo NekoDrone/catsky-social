@@ -1,4 +1,5 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+<<<<<<< HEAD
 import {
   ScrollView,
   type StyleProp,
@@ -7,11 +8,17 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+=======
+import {TextInput, useWindowDimensions, View} from 'react-native'
+>>>>>>> upstream/main
 import {type ModerationOpts} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+<<<<<<< HEAD
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+=======
+>>>>>>> upstream/main
 import {logEvent} from '#/lib/statsig/statsig'
 import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -28,7 +35,10 @@ import {
 import {
   atoms as a,
   native,
+<<<<<<< HEAD
   tokens,
+=======
+>>>>>>> upstream/main
   useBreakpoints,
   useTheme,
   type ViewStyleProp,
@@ -40,6 +50,10 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
 import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+<<<<<<< HEAD
+=======
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
+>>>>>>> upstream/main
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -337,12 +351,22 @@ let Header = ({
           }}
           onEscape={control.close}
         />
+<<<<<<< HEAD
         <Tabs
           onSelectTab={onSelectTab}
           interests={interests}
           selectedInterest={selectedInterest}
           hasSearchText={!!searchText}
           interestsDisplayNames={interestsDisplayNames}
+=======
+        <InterestTabs
+          onSelectTab={onSelectTab}
+          interests={interests}
+          selectedInterest={selectedInterest}
+          disabled={!!searchText}
+          interestsDisplayNames={interestsDisplayNames}
+          TabComponent={Tab}
+>>>>>>> upstream/main
         />
       </View>
     </View>
@@ -403,6 +427,7 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
+<<<<<<< HEAD
 let Tabs = ({
   onSelectTab,
   interests,
@@ -496,6 +521,8 @@ let Tabs = ({
 Tabs = memo(Tabs)
 export {Tabs}
 
+=======
+>>>>>>> upstream/main
 let Tab = ({
   onSelectTab,
   interest,
@@ -513,24 +540,51 @@ let Tab = ({
 }): React.ReactNode => {
   const t = useTheme()
   const {_} = useLingui()
+<<<<<<< HEAD
   const activeText = active ? _(msg` (active)`) : ''
+=======
+  const label = active
+    ? _(
+        msg({
+          message: `Search for "${interestsDisplayName}" (active)`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.',
+        }),
+      )
+    : _(
+        msg({
+          message: `Search for "${interestsDisplayName}"`,
+          comment:
+            'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.',
+        }),
+      )
+>>>>>>> upstream/main
   return (
     <View
       key={interest}
       onLayout={e =>
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
+<<<<<<< HEAD
       <Button
         label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
         onPress={() => onSelectTab(index)}>
         {({hovered, pressed, focused}) => (
+=======
+      <Button label={label} onPress={() => onSelectTab(index)}>
+        {({hovered, pressed}) => (
+>>>>>>> upstream/main
           <View
             style={[
               a.rounded_full,
               a.px_lg,
               a.py_sm,
               a.border,
+<<<<<<< HEAD
               active || hovered || pressed || focused
+=======
+              active || hovered || pressed
+>>>>>>> upstream/main
                 ? [
                     t.atoms.bg_contrast_25,
                     {borderColor: t.atoms.bg_contrast_25.backgroundColor},
@@ -540,7 +594,11 @@ let Tab = ({
             <Text
               style={[
                 a.font_medium,
+<<<<<<< HEAD
                 active || hovered || pressed || focused
+=======
+                active || hovered || pressed
+>>>>>>> upstream/main
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,
               ]}>
@@ -759,6 +817,7 @@ function Empty({message}: {message: string}) {
     </View>
   )
 }
+<<<<<<< HEAD
 
 export function boostInterests(boosts?: string[]) {
   return (_a: string, _b: string) => {
@@ -769,3 +828,5 @@ export function boostInterests(boosts?: string[]) {
     return rankA - rankB
   }
 }
+=======
+>>>>>>> upstream/main

@@ -14,11 +14,17 @@ import {
 } from '#/screens/Onboarding/state'
 import {useTheme} from '#/alf'
 import {atoms as a} from '#/alf'
+<<<<<<< HEAD
 import {Button} from '#/components/Button'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests, Tabs} from '#/components/ProgressGuide/FollowDialog'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+=======
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
+import * as ProfileCard from '#/components/ProfileCard'
+import {SubtleHover} from '#/components/SubtleHover'
+>>>>>>> upstream/main
 import type * as bsky from '#/types/bsky'
 
 export function useLoadEnoughProfiles({
@@ -59,10 +65,18 @@ export function SuggestedAccountsTabBar({
   selectedInterest,
   onSelectInterest,
   hideDefaultTab,
+<<<<<<< HEAD
+=======
+  defaultTabLabel,
+>>>>>>> upstream/main
 }: {
   selectedInterest: string | null
   onSelectInterest: (interest: string | null) => void
   hideDefaultTab?: boolean
+<<<<<<< HEAD
+=======
+  defaultTabLabel?: string
+>>>>>>> upstream/main
 }) {
   const {_} = useLingui()
   const interestsDisplayNames = useInterestsDisplayNames()
@@ -71,9 +85,16 @@ export function SuggestedAccountsTabBar({
   const interests = Object.keys(interestsDisplayNames)
     .sort(boostInterests(popularInterests))
     .sort(boostInterests(personalizedInterests))
+<<<<<<< HEAD
   return (
     <BlockDrawerGesture>
       <Tabs
+=======
+
+  return (
+    <BlockDrawerGesture>
+      <InterestTabs
+>>>>>>> upstream/main
         interests={hideDefaultTab ? interests : ['all', ...interests]}
         selectedInterest={
           selectedInterest || (hideDefaultTab ? interests[0] : 'all')
@@ -86,11 +107,15 @@ export function SuggestedAccountsTabBar({
           )
           onSelectInterest(tab === 'all' ? null : tab)
         }}
+<<<<<<< HEAD
         hasSearchText={false}
+=======
+>>>>>>> upstream/main
         interestsDisplayNames={
           hideDefaultTab
             ? interestsDisplayNames
             : {
+<<<<<<< HEAD
                 all: _(msg`For You`),
                 ...interestsDisplayNames,
               }
@@ -102,11 +127,18 @@ export function SuggestedAccountsTabBar({
             paddingLeft: a.px_md.paddingLeft,
           },
         ]}
+=======
+                all: defaultTabLabel || _(msg`For You`),
+                ...interestsDisplayNames,
+              }
+        }
+>>>>>>> upstream/main
       />
     </BlockDrawerGesture>
   )
 }
 
+<<<<<<< HEAD
 let Tab = ({
   onSelectTab,
   interest,
@@ -162,6 +194,8 @@ let Tab = ({
 }
 Tab = memo(Tab)
 
+=======
+>>>>>>> upstream/main
 /**
  * Profile card for suggested accounts. Note: border is on the bottom edge
  */

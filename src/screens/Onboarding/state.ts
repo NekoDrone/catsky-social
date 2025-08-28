@@ -11,7 +11,11 @@ import {
 export type OnboardingState = {
   hasPrev: boolean
   totalSteps: number
+<<<<<<< HEAD
   activeStep: 'profile' | 'interests' | 'finished'
+=======
+  activeStep: 'profile' | 'interests' | 'suggested-accounts' | 'finished'
+>>>>>>> upstream/main
   activeStepIndex: number
 
   interestsStepResults: {
@@ -34,6 +38,14 @@ export type OnboardingState = {
       backgroundColor: AvatarColor
     }
   }
+<<<<<<< HEAD
+=======
+
+  experiments?: {
+    onboarding_suggested_accounts?: boolean
+    onboarding_value_prop?: boolean
+  }
+>>>>>>> upstream/main
 }
 
 export type OnboardingAction =
@@ -160,22 +172,67 @@ export function reducer(
 
   switch (a.type) {
     case 'next': {
+<<<<<<< HEAD
       if (s.activeStep === 'profile') {
         next.activeStep = 'interests'
         next.activeStepIndex = 2
       } else if (s.activeStep === 'interests') {
         next.activeStep = 'finished'
         next.activeStepIndex = 3
+=======
+      if (s.experiments?.onboarding_suggested_accounts) {
+        if (s.activeStep === 'profile') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'interests') {
+          next.activeStep = 'suggested-accounts'
+          next.activeStepIndex = 3
+        }
+        if (s.activeStep === 'suggested-accounts') {
+          next.activeStep = 'finished'
+          next.activeStepIndex = 4
+        }
+      } else {
+        if (s.activeStep === 'profile') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'interests') {
+          next.activeStep = 'finished'
+          next.activeStepIndex = 3
+        }
+>>>>>>> upstream/main
       }
       break
     }
     case 'prev': {
+<<<<<<< HEAD
       if (s.activeStep === 'interests') {
         next.activeStep = 'profile'
         next.activeStepIndex = 1
       } else if (s.activeStep === 'finished') {
         next.activeStep = 'interests'
         next.activeStepIndex = 2
+=======
+      if (s.experiments?.onboarding_suggested_accounts) {
+        if (s.activeStep === 'interests') {
+          next.activeStep = 'profile'
+          next.activeStepIndex = 1
+        } else if (s.activeStep === 'suggested-accounts') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        } else if (s.activeStep === 'finished') {
+          next.activeStep = 'suggested-accounts'
+          next.activeStepIndex = 3
+        }
+      } else {
+        if (s.activeStep === 'interests') {
+          next.activeStep = 'profile'
+          next.activeStepIndex = 1
+        } else if (s.activeStep === 'finished') {
+          next.activeStep = 'interests'
+          next.activeStepIndex = 2
+        }
+>>>>>>> upstream/main
       }
       break
     }

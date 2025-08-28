@@ -28,7 +28,10 @@ export function AnimatedProfileHeaderSuggestedFollows({
   actorDid: string
 }) {
   const gate = useGate()
+<<<<<<< HEAD
   if (!gate('post_follow_profile_suggested_accounts')) return null
+=======
+>>>>>>> upstream/main
 
   /* NOTE (caidanw):
    * Android does not work well with this feature yet.
@@ -37,6 +40,11 @@ export function AnimatedProfileHeaderSuggestedFollows({
    **/
   if (isAndroid) return null
 
+<<<<<<< HEAD
+=======
+  if (!gate('post_follow_profile_suggested_accounts')) return null
+
+>>>>>>> upstream/main
   return (
     <AccordionAnimation isExpanded={isExpanded}>
       <ProfileHeaderSuggestedFollows actorDid={actorDid} />

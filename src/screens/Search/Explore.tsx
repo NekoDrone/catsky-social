@@ -66,9 +66,15 @@ import {
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {StarterPack} from '#/components/icons/StarterPack'
 import {UserCircle_Stroke2_Corner0_Rounded as Person} from '#/components/icons/UserCircle'
+<<<<<<< HEAD
 import {Loader} from '#/components/Loader'
 import * as ProfileCard from '#/components/ProfileCard'
 import {boostInterests} from '#/components/ProgressGuide/FollowDialog'
+=======
+import {boostInterests} from '#/components/InterestTabs'
+import {Loader} from '#/components/Loader'
+import * as ProfileCard from '#/components/ProfileCard'
+>>>>>>> upstream/main
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import * as ModuleHeader from './components/ModuleHeader'
