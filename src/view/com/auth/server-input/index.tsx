@@ -13,7 +13,6 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {InlineLinkText} from '#/components/Link'
 import {P, Text} from '#/components/Typography'
@@ -29,7 +28,6 @@ export function ServerInputDialog({
   const formRef = useRef<DialogInnerRef>(null)
 
   // persist these options between dialog open/close
-  const [fixedOption, setFixedOption] = useState(BSKY_SERVICE)
   const [previousCustomAddress, setPreviousCustomAddress] = useState('')
 
   const onClose = useCallback(() => {
@@ -41,9 +39,9 @@ export function ServerInputDialog({
       }
     }
     logEvent('signin:hostingProviderPressed', {
-      hostingProviderDidChange: fixedOption !== BSKY_SERVICE,
+      hostingProviderDidChange: false, // stubbed for PDS auto-resolution
     })
-  }, [onSelect, fixedOption])
+  }, [onSelect])
 
   return (
     <Dialog.Outer
@@ -53,8 +51,6 @@ export function ServerInputDialog({
       <Dialog.Handle />
       <DialogInner
         formRef={formRef}
-        fixedOption={fixedOption}
-        setFixedOption={setFixedOption}
         initialCustomAddress={previousCustomAddress}
       />
     </Dialog.Outer>
@@ -65,13 +61,9 @@ type DialogInnerRef = {getFormState: () => string | null}
 
 function DialogInner({
   formRef,
-  fixedOption,
-  setFixedOption,
   initialCustomAddress,
 }: {
   formRef: React.Ref<DialogInnerRef>
-  fixedOption: string
-  setFixedOption: (opt: string) => void
   initialCustomAddress: string
 }) {
   const control = Dialog.useDialogContext()
@@ -88,14 +80,9 @@ function DialogInner({
     formRef,
     () => ({
       getFormState: () => {
-        let url
-        if (fixedOption === 'custom') {
-          url = customAddress.trim().toLowerCase()
-          if (!url) {
-            return null
-          }
-        } else {
-          url = fixedOption
+        let url = customAddress.trim().toLowerCase()
+        if (!url) {
+          return null
         }
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           if (url === 'localhost' || url.startsWith('localhost:')) {
@@ -105,18 +92,16 @@ function DialogInner({
           }
         }
 
-        if (fixedOption === 'custom') {
-          if (!pdsAddressHistory.includes(url)) {
-            const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
-            setPdsAddressHistory(newHistory)
-            persisted.write('pdsAddressHistory', newHistory)
-          }
+        if (!pdsAddressHistory.includes(url)) {
+          const newHistory = [url, ...pdsAddressHistory.slice(0, 4)]
+          setPdsAddressHistory(newHistory)
+          persisted.write('pdsAddressHistory', newHistory)
         }
 
         return url
       },
     }),
-    [customAddress, fixedOption, pdsAddressHistory],
+    [customAddress, pdsAddressHistory],
   )
 
   const isFirstTimeUser = accounts.length === 0
@@ -129,22 +114,8 @@ function DialogInner({
         <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
           <Trans>Choose your account provider</Trans>
         </Text>
-        <ToggleButton.Group
-          label="Preferences"
-          values={[fixedOption]}
-          onChange={values => setFixedOption(values[0])}>
-          <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
-            <ToggleButton.ButtonText>{_(msg`Bluesky`)}</ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button
-            testID="customSelectBtn"
-            name="custom"
-            label={_(msg`Custom`)}>
-            <ToggleButton.ButtonText>{_(msg`Custom`)}</ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
 
-        {fixedOption === BSKY_SERVICE && isFirstTimeUser && (
+        {isFirstTimeUser && (
           <Admonition type="tip">
             <Trans>
               Bluesky is an open network where you can choose your own provider.
@@ -154,47 +125,45 @@ function DialogInner({
           </Admonition>
         )}
 
-        {fixedOption === 'custom' && (
-          <View
-            style={[
-              a.border,
-              t.atoms.border_contrast_low,
-              a.rounded_sm,
-              a.px_md,
-              a.py_md,
-            ]}>
-            <TextField.LabelText nativeID="address-input-label">
-              <Trans>Server address</Trans>
-            </TextField.LabelText>
-            <TextField.Root>
-              <TextField.Icon icon={Globe} />
-              <Dialog.Input
-                testID="customServerTextInput"
-                value={customAddress}
-                onChangeText={setCustomAddress}
-                label="my-server.com"
-                accessibilityLabelledBy="address-input-label"
-                autoCapitalize="none"
-                keyboardType="url"
-              />
-            </TextField.Root>
-            {pdsAddressHistory.length > 0 && (
-              <View style={[a.flex_row, a.flex_wrap, a.mt_xs]}>
-                {pdsAddressHistory.map(uri => (
-                  <Button
-                    key={uri}
-                    variant="ghost"
-                    color="primary"
-                    label={uri}
-                    style={[a.px_sm, a.py_xs, a.rounded_sm, a.gap_sm]}
-                    onPress={() => setCustomAddress(uri)}>
-                    <ButtonText>{uri}</ButtonText>
-                  </Button>
-                ))}
-              </View>
-            )}
-          </View>
-        )}
+        <View
+          style={[
+            a.border,
+            t.atoms.border_contrast_low,
+            a.rounded_sm,
+            a.px_md,
+            a.py_md,
+          ]}>
+          <TextField.LabelText nativeID="address-input-label">
+            <Trans>Server address</Trans>
+          </TextField.LabelText>
+          <TextField.Root>
+            <TextField.Icon icon={Globe} />
+            <Dialog.Input
+              testID="customServerTextInput"
+              value={customAddress}
+              onChangeText={setCustomAddress}
+              label="my-server.com"
+              accessibilityLabelledBy="address-input-label"
+              autoCapitalize="none"
+              keyboardType="url"
+            />
+          </TextField.Root>
+          {pdsAddressHistory.length > 0 && (
+            <View style={[a.flex_row, a.flex_wrap, a.mt_xs]}>
+              {pdsAddressHistory.map(uri => (
+                <Button
+                  key={uri}
+                  variant="ghost"
+                  color="primary"
+                  label={uri}
+                  style={[a.px_sm, a.py_xs, a.rounded_sm, a.gap_sm]}
+                  onPress={() => setCustomAddress(uri)}>
+                  <ButtonText>{uri}</ButtonText>
+                </Button>
+              ))}
+            </View>
+          )}
+        </View>
 
         <View style={[a.py_xs]}>
           <P

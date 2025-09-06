@@ -18,7 +18,7 @@ export function HostingProvider({
   onOpenDialog,
   minimal,
 }: {
-  serviceUrl: string
+  serviceUrl?: string | undefined
   onSelectServiceUrl: (provider: string) => void
   onOpenDialog?: () => void
   minimal?: boolean
@@ -26,6 +26,8 @@ export function HostingProvider({
   const serverInputControl = useDialogControl()
   const t = useTheme()
   const {_} = useLingui()
+  const serviceProviderLabel =
+    serviceUrl === undefined ? _(msg`Automatic`) : toNiceDomain(serviceUrl)
 
   const onPressSelectService = React.useCallback(() => {
     Keyboard.dismiss()
@@ -45,7 +47,7 @@ export function HostingProvider({
             <Trans>You are creating an account on</Trans>
           </Text>
           <Button
-            label={toNiceDomain(serviceUrl)}
+            label={serviceProviderLabel}
             accessibilityHint={_(msg`Changes hosting provider`)}
             onPress={onPressSelectService}
             variant="ghost"
@@ -56,16 +58,14 @@ export function HostingProvider({
               {marginHorizontal: tokens.space.xs * -1},
               {paddingVertical: 0},
             ]}>
-            <ButtonText style={[a.text_sm]}>
-              {toNiceDomain(serviceUrl)}
-            </ButtonText>
+            <ButtonText style={[a.text_sm]}>{serviceProviderLabel}</ButtonText>
             <ButtonIcon icon={PencilIcon} />
           </Button>
         </View>
       ) : (
         <Button
           testID="selectServiceButton"
-          label={toNiceDomain(serviceUrl)}
+          label={serviceProviderLabel}
           accessibilityHint={_(msg`Changes hosting provider`)}
           variant="solid"
           color="secondary"
@@ -94,7 +94,7 @@ export function HostingProvider({
                     }
                   />
                 </View>
-                <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+                <Text style={[a.text_md]}>{serviceProviderLabel}</Text>
                 <View
                   style={[
                     a.rounded_sm,

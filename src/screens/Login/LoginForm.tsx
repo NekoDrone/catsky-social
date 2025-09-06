@@ -47,9 +47,11 @@ export const LoginForm = ({
   onPressForgotPassword,
   onAttemptSuccess,
   onAttemptFailed,
+  debouncedResolveService,
+  isResolvingService,
 }: {
   error: string
-  serviceUrl: string
+  serviceUrl?: string | undefined
   serviceDescription: ServiceDescription | undefined
   initialHandle: string
   setError: (v: string) => void
@@ -59,6 +61,8 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
   onAttemptSuccess: () => void
   onAttemptFailed: () => void
+  debouncedResolveService: (identifier: string) => void
+  isResolvingService: boolean
 }) => {
   const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
@@ -97,6 +101,11 @@ export const LoginForm = ({
 
     if (!password) {
       setError(_(msg`Please enter your password`))
+      return
+    }
+
+    if (!serviceUrl) {
+      setError(_(msg`Please enter hosting provider URL`))
       return
     }
 
@@ -182,6 +191,13 @@ export const LoginForm = ({
       <View>
         <TextField.LabelText>
           <Trans>Hosting provider</Trans>
+          {isResolvingService && (
+            <ActivityIndicator
+              size={12}
+              color={t.palette.contrast_500}
+              style={a.ml_sm}
+            />
+          )}
         </TextField.LabelText>
         <HostingProvider
           serviceUrl={serviceUrl}
@@ -208,6 +224,15 @@ export const LoginForm = ({
               defaultValue={initialHandle || ''}
               onChangeText={v => {
                 identifierValueRef.current = v
+                // Trigger PDS auto-resolution for handles/DIDs
+                const id = v.trim()
+                if (!id) return
+                if (
+                  id.startsWith('did:') ||
+                  (id.includes('.') && !id.includes('@'))
+                ) {
+                  debouncedResolveService(id)
+                }
               }}
               onSubmitEditing={() => {
                 passwordRef.current?.focus()
@@ -330,9 +355,9 @@ export const LoginForm = ({
               <Trans>Retry</Trans>
             </ButtonText>
           </Button>
-        ) : !serviceDescription ? (
+        ) : !serviceDescription && serviceUrl !== undefined ? (
           <>
-            <ActivityIndicator />
+            <ActivityIndicator color={t.palette.contrast_500} />
             <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
               <Trans>Connecting...</Trans>
             </Text>
