@@ -6,6 +6,10 @@ Get the app itself:
 
 - **Web: bsky.app**
 
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/NekoDrone/catsky-social">
+<img src="https://github.com/ImranR98/Obtainium/blob/main/assets/graphics/badge_obtainium.png?raw=true"
+alt="Get it on Obtainium" align="center" height="54" /></a>
+
 ## Development Resources
 
 This is a [React Native](https://reactnative.dev/) application, written in the TypeScript programming language. It builds on the `atproto` TypeScript packages (like [`@atproto/api`](https://www.npmjs.com/package/@atproto/api)), which are also open source, but in [a different git repository](https://github.com/bluesky-social/atproto).
