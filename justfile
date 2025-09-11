@@ -34,9 +34,9 @@ build-android-gradle: prebuild-android
 
 [group('build')]
 postbuild-web:
-	pushd bskyweb
+	cd bskyweb
 	go build -o bskyweb ./cmd/bskyweb/
-	popd
+	cd ..
 	tar -czf catskyweb.tar.gz bskyweb/
 	scp -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no catskyweb.tar.gz catsky@${VPS_IP}:/tmp/catsky/
 	# TODO: something to trigger the daemon rerun on the VPS.
