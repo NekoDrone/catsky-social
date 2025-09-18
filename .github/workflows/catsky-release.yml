@@ -1,0 +1,76 @@
+name: Release Catsky
+on: workflow_dispatch # could be weekly/etc or on a separate branch.
+
+jobs:
+  build-android:
+    name: Build Catsky for Android
+    runs-on: ubuntu-latest
+    outputs:
+      apk-path: ${{ steps.upload-artifact.outputs.artifact-path }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: gradle
+
+      - uses: android-actions/setup-android@v3
+
+      - uses: extractions/setup-just@v2
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Copy example build settings
+        run: |
+          cp .env.example .env
+          cp google-services.json.example google-services.json
+
+      - name: Build APK
+        run: just dist-build-android-gradle
+
+      - name: Upload APK artifact
+        id: upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+  release:
+    name: Create GitHub Release
+    needs: build-android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android
+          path: .
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: catsky-v${{ github.run_number }}
+          release_name: Catsky v${{ github.run_number }}
+          draft: false
+          prerelease: false
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app-release.apk
+          asset_name: app-release.apk
+          asset_content_type: application/vnd.android.package-archive
