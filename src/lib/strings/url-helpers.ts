@@ -79,7 +79,7 @@ export function toShortUrl(url: string): string {
 
 export function toShareUrl(url: string): string {
   if (!url.startsWith('https')) {
-    const urlp = new URL('https://bsky.app')
+    const urlp = new URL('https://catsky.social')
     urlp.pathname = url
     url = urlp.toString()
   }
