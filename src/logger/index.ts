@@ -3,9 +3,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {logEvent} from '#/lib/statsig/statsig'
 import {add} from '#/logger/logDump'
 import {type MetricEvents} from '#/logger/metrics'
-import {bitdriftTransport} from '#/logger/transports/bitdrift'
 import {consoleTransport} from '#/logger/transports/console'
-import {sentryTransport} from '#/logger/transports/sentry'
 import {
   LogContext,
   LogLevel,
@@ -13,15 +11,14 @@ import {
   type Transport,
 } from '#/logger/types'
 import {enabledLogLevels} from '#/logger/util'
-import {isNative} from '#/platform/detection'
 import {ENV} from '#/env'
 
 const TRANSPORTS: Transport[] = (function configureTransports() {
   switch (ENV) {
     case 'production': {
-      return [sentryTransport, isNative && bitdriftTransport].filter(
-        Boolean,
-      ) as Transport[]
+      // return [sentryTransport, isNative && bitdriftTransport].filter(
+      // Boolean,
+      // ) as Transport[]
     }
     case 'test': {
       return []
