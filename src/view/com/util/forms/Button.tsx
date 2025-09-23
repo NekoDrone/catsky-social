@@ -14,7 +14,8 @@ import {
 } from 'react-native'
 
 import {choose} from '#/lib/functions'
-import {useTheme} from '#/lib/ThemeContext'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Text} from '../text/Text'
 
 export type ButtonType =
@@ -71,39 +72,46 @@ export function Button({
   disabled?: boolean
 }>) {
   const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const typeOuterStyle = choose<ViewStyle, Record<ButtonType, ViewStyle>>(
     type,
     {
       primary: {
-        backgroundColor: theme.palette.primary.background,
+        backgroundColor: theme.palette.primary_500,
       },
       secondary: {
-        backgroundColor: theme.palette.secondary.background,
+        backgroundColor: theme.palette.positive_500,
       },
       default: {
-        backgroundColor: theme.palette.default.backgroundLight,
+        backgroundColor: theme.palette.contrast_25,
       },
       inverted: {
-        backgroundColor: theme.palette.inverted.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.black : theme.palette.white,
       },
       'primary-outline': {
-        backgroundColor: theme.palette.default.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
         borderWidth: 1,
-        borderColor: theme.palette.primary.border,
+        borderColor: theme.palette.primary_600,
       },
       'secondary-outline': {
-        backgroundColor: theme.palette.default.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
         borderWidth: 1,
-        borderColor: theme.palette.secondary.border,
+        borderColor: theme.palette.positive_600,
       },
       'primary-light': {
-        backgroundColor: theme.palette.default.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
       },
       'secondary-light': {
-        backgroundColor: theme.palette.default.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
       },
       'default-light': {
-        backgroundColor: theme.palette.default.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
       },
     },
   )
@@ -111,39 +119,36 @@ export function Button({
     type,
     {
       primary: {
-        color: theme.palette.primary.text,
+        color: theme.palette.white,
         fontWeight: '600',
       },
       secondary: {
-        color: theme.palette.secondary.text,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        color: theme.palette.white,
       },
       default: {
-        color: theme.palette.default.text,
+        color:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
       },
       inverted: {
-        color: theme.palette.inverted.text,
+        color:
+          colorMode === 'light' ? theme.palette.black : theme.palette.white,
         fontWeight: '600',
       },
       'primary-outline': {
-        color: theme.palette.primary.textInverted,
-        fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+        color: theme.palette.primary_500,
       },
       'secondary-outline': {
-        color: theme.palette.secondary.textInverted,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        color: theme.palette.positive_600,
       },
       'primary-light': {
-        color: theme.palette.primary.textInverted,
-        fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+        color: theme.palette.primary_500,
       },
       'secondary-light': {
-        color: theme.palette.secondary.textInverted,
-        fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+        color: theme.palette.positive_600,
       },
       'default-light': {
-        color: theme.palette.default.text,
-        fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+        color:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
       },
     },
   )

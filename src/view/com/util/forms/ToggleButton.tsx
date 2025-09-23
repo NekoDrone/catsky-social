@@ -8,8 +8,9 @@ import {
 
 import {choose} from '#/lib/functions'
 import {colors} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
 import {type TypographyVariant} from '#/lib/ThemeContext'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Text} from '../text/Text'
 import {Button, type ButtonType} from './Button'
 
@@ -34,114 +35,116 @@ export function ToggleButton({
   onPress?: () => void
 }) {
   const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const circleStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
-      borderColor: theme.palette.primary.text,
+      borderColor: theme.palette.primary_500,
     },
     secondary: {
-      borderColor: theme.palette.secondary.text,
+      borderColor: theme.palette.positive_600,
     },
     inverted: {
-      borderColor: theme.palette.inverted.text,
+      borderColor:
+        colorMode === 'light' ? theme.palette.white : theme.palette.black,
     },
     'primary-outline': {
-      borderColor: theme.palette.primary.border,
+      borderColor: theme.palette.primary_500,
     },
     'secondary-outline': {
-      borderColor: theme.palette.secondary.border,
+      borderColor: theme.palette.positive_600,
     },
     'primary-light': {
-      borderColor: theme.palette.primary.border,
+      borderColor: theme.palette.primary_500,
     },
     'secondary-light': {
-      borderColor: theme.palette.secondary.border,
+      borderColor: theme.palette.positive_600,
     },
     default: {
-      borderColor: theme.palette.default.border,
+      borderColor:
+        colorMode === 'light' ? theme.palette.white : theme.palette.black,
     },
     'default-light': {
-      borderColor: theme.palette.default.border,
+      borderColor:
+        colorMode === 'light' ? theme.palette.white : theme.palette.black,
     },
   })
   const circleFillStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(
     type,
     {
       primary: {
-        backgroundColor: theme.palette.primary.text,
+        backgroundColor: theme.palette.primary_500,
         opacity: isSelected ? 1 : 0.33,
       },
       secondary: {
-        backgroundColor: theme.palette.secondary.text,
+        backgroundColor: theme.palette.positive_600,
         opacity: isSelected ? 1 : 0.33,
       },
       inverted: {
-        backgroundColor: theme.palette.inverted.text,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
         opacity: isSelected ? 1 : 0.33,
       },
       'primary-outline': {
-        backgroundColor: theme.palette.primary.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.black : theme.palette.white,
         opacity: isSelected ? 1 : 0.5,
       },
       'secondary-outline': {
-        backgroundColor: theme.palette.secondary.background,
+        backgroundColor: theme.palette.positive_500,
         opacity: isSelected ? 1 : 0.5,
       },
       'primary-light': {
-        backgroundColor: theme.palette.primary.background,
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.black : theme.palette.white,
         opacity: isSelected ? 1 : 0.5,
       },
       'secondary-light': {
-        backgroundColor: theme.palette.secondary.background,
+        backgroundColor: theme.palette.positive_500,
         opacity: isSelected ? 1 : 0.5,
       },
       default: {
         backgroundColor: isSelected
-          ? theme.palette.primary.background
+          ? colorMode === 'light'
+            ? theme.palette.black
+            : theme.palette.white
           : colors.gray3,
       },
       'default-light': {
         backgroundColor: isSelected
-          ? theme.palette.primary.background
+          ? colorMode === 'light'
+            ? theme.palette.black
+            : theme.palette.white
           : colors.gray3,
       },
     },
   )
   const labelStyle = choose<TextStyle, Record<ButtonType, TextStyle>>(type, {
     primary: {
-      color: theme.palette.primary.text,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+      color: theme.palette.primary_500,
     },
     secondary: {
-      color: theme.palette.secondary.text,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+      color: theme.palette.positive_600,
     },
     inverted: {
-      color: theme.palette.inverted.text,
-      fontWeight: theme.palette.inverted.isLowContrast ? '600' : undefined,
+      color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
     },
     'primary-outline': {
-      color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+      color: theme.palette.primary_500,
     },
     'secondary-outline': {
-      color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+      color: theme.palette.positive_600,
     },
     'primary-light': {
-      color: theme.palette.primary.textInverted,
-      fontWeight: theme.palette.primary.isLowContrast ? '600' : undefined,
+      color: theme.palette.primary_500,
     },
     'secondary-light': {
-      color: theme.palette.secondary.textInverted,
-      fontWeight: theme.palette.secondary.isLowContrast ? '600' : undefined,
+      color: theme.palette.positive_600,
     },
     default: {
-      color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+      color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
     },
     'default-light': {
-      color: theme.palette.default.text,
-      fontWeight: theme.palette.default.isLowContrast ? '600' : undefined,
+      color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
     },
   })
   return (
