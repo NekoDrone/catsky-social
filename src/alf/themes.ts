@@ -187,7 +187,7 @@ export function createThemes({
   } as const
 
   const darkPalette: Palette = {
-    white: color.gray_25,
+    white: mocha.text,
     black: color.trueBlack,
     like: color.like,
 
@@ -250,11 +250,11 @@ export function createThemes({
 
   const dimPalette: Palette = {
     ...darkPalette,
-    black: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
+    black: mocha.base,
     like: mocha.red,
 
-    contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
-    contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
+    contrast_25: mocha.mantle,
+    contrast_50: mocha.mantle,
     contrast_100: `hsl(${hues.primary}, 28%, ${dimScale[3]}%)`,
     contrast_200: `hsl(${hues.primary}, 28%, ${dimScale[4]}%)`,
     contrast_300: `hsl(${hues.primary}, 24%, ${dimScale[5]}%)`,
@@ -493,19 +493,19 @@ export function createThemes({
     atoms: {
       ...dark.atoms,
       text: {
-        color: dimPalette.white,
+        color: mocha.text,
       },
       text_contrast_low: {
-        color: dimPalette.contrast_400,
+        color: mocha.overlay0,
       },
       text_contrast_medium: {
-        color: dimPalette.contrast_600,
+        color: mocha.overlay2,
       },
       text_contrast_high: {
-        color: dimPalette.contrast_900,
+        color: mocha.subtext0,
       },
       text_inverted: {
-        color: dimPalette.black,
+        color: mocha.crust,
       },
       bg: {
         backgroundColor: dimPalette.black,
