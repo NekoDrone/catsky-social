@@ -1,4 +1,5 @@
 import {atoms} from '#/alf/atoms'
+import {mocha} from '#/alf/catppuccin/palette'
 import {type Palette, type Theme} from '#/alf/types'
 import {
   BLUE_HUE,
@@ -59,6 +60,7 @@ export function createThemes({
   dark: Theme
   dim: Theme
 } {
+  const accent = mocha.mauve
   const color = {
     like: '#ec4899',
     trueBlack: '#000000',
@@ -249,7 +251,7 @@ export function createThemes({
   const dimPalette: Palette = {
     ...darkPalette,
     black: `hsl(${hues.primary}, 28%, ${dimScale[0]}%)`,
-    like: color.like,
+    like: mocha.red,
 
     contrast_25: `hsl(${hues.primary}, 28%, ${dimScale[1]}%)`,
     contrast_50: `hsl(${hues.primary}, 28%, ${dimScale[2]}%)`,
@@ -271,7 +273,7 @@ export function createThemes({
     primary_200: `hsl(${hues.primary}, 82%, ${dimScale[4]}%)`,
     primary_300: `hsl(${hues.primary}, 90%, ${dimScale[5]}%)`,
     primary_400: `hsl(${hues.primary}, 95%, ${dimScale[6]}%)`,
-    primary_500: `hsl(${hues.primary}, 99%, ${dimScale[7]}%)`,
+    primary_500: accent,
     primary_600: `hsl(${hues.primary}, 99%, ${dimScale[8]}%)`,
     primary_700: `hsl(${hues.primary}, 99%, ${dimScale[9]}%)`,
     primary_800: `hsl(${hues.primary}, 99%, ${dimScale[10]}%)`,
