@@ -393,6 +393,14 @@ export function createThemes({
       shadow_lg: {
         ...atoms.shadow_lg,
         shadowColor: lightPalette.black,
+      }, // TODO: probably delete this when we shift to setting CTP colours.
+      trending_hot: {
+        color: '#FFFFFF',
+        backgroundColor: 'red',
+      },
+      trending_new: {
+        color: '#FFFFFF',
+        backgroundColor: 'green',
       },
     },
   }
