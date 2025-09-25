@@ -49,6 +49,7 @@ function updateDocument(theme: ThemeName) {
     // remove any other color mode classes
     html.className = html.className.replace(/(theme)--\w+/g, '')
     html.classList.add(`theme--${theme}`)
+    html.style.backgroundColor = getBackgroundColor(theme)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
   }
