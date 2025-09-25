@@ -1,12 +1,13 @@
-import {StyleSheet, View} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {StyleSheet, type TextStyle, View} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {s} from '#/lib/styles'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button} from './forms/Button'
 import {Text} from './text/Text'
 
@@ -19,19 +20,27 @@ interface Props {
 }
 
 export function EmptyStateWithButton(props: Props) {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleInverted: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   return (
     <View testID={props.testID} style={styles.container}>
       <View style={styles.iconContainer}>
         <FontAwesomeIcon
           icon={props.icon}
-          style={[styles.icon, pal.text]}
+          style={[styles.icon, textStyle]}
           size={62}
         />
       </View>
-      <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+      <Text type="xl-medium" style={[s.textCenter, textStyle]}>
         {props.message}
       </Text>
       <View style={styles.btns}>
@@ -42,10 +51,10 @@ export function EmptyStateWithButton(props: Props) {
           onPress={props.onPress}>
           <FontAwesomeIcon
             icon="plus"
-            style={palInverted.text as FontAwesomeIconStyle}
+            style={textStyleInverted as FontAwesomeIconStyle}
             size={14}
           />
-          <Text type="lg-medium" style={palInverted.text}>
+          <Text type="lg-medium" style={textStyleInverted}>
             {props.buttonLabel}
           </Text>
         </Button>

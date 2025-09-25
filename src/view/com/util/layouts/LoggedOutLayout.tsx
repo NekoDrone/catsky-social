@@ -1,12 +1,12 @@
-import React from 'react'
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View, type ViewStyle} from 'react-native'
+import type React from 'react'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {isWeb} from '#/platform/detection'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Text} from '../text/Text'
 
 export const LoggedOutLayout = ({
@@ -22,11 +22,20 @@ export const LoggedOutLayout = ({
   scrollable?: boolean
 }>) => {
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const pal = usePalette('default')
-  const sideBg = useColorSchemeStyle(pal.viewLight, pal.view)
-  const contentBg = useColorSchemeStyle(pal.view, {
-    backgroundColor: pal.colors.background,
-    borderColor: pal.colors.border,
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+  const sideBg = useColorSchemeStyle(
+    {backgroundColor: theme.palette.contrast_25},
+    viewStyle,
+  )
+  const contentBg = useColorSchemeStyle(viewStyle, {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+    borderColor: theme.palette.contrast_25,
     borderLeftWidth: 1,
   })
 
@@ -54,7 +63,12 @@ export const LoggedOutLayout = ({
       <View style={[styles.side, sideBg]}>
         <Text
           style={[
-            pal.textLight,
+            {
+              color:
+                colorMode === 'dark'
+                  ? theme.palette.contrast_600
+                  : theme.palette.contrast_700,
+            },
             styles.leadinText,
             isTabletOrMobile && styles.leadinTextSmall,
           ]}>
@@ -62,13 +76,23 @@ export const LoggedOutLayout = ({
         </Text>
         <Text
           style={[
-            pal.link,
+            {color: theme.palette.primary_500},
             styles.titleText,
             isTabletOrMobile && styles.titleTextSmall,
           ]}>
           {title}
         </Text>
-        <Text type="2xl-medium" style={[pal.textLight, styles.descriptionText]}>
+        <Text
+          type="2xl-medium"
+          style={[
+            {
+              color:
+                colorMode === 'dark'
+                  ? theme.palette.contrast_600
+                  : theme.palette.contrast_700,
+            },
+            styles.descriptionText,
+          ]}>
           {description}
         </Text>
       </View>

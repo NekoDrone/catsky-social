@@ -1,23 +1,32 @@
 import React from 'react'
-import {Dimensions, StyleSheet, View} from 'react-native'
+import {Dimensions, StyleSheet, type TextStyle, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function FollowingEndOfFeed() {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const navigation = useNavigation<NavigationProp>()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleInverted: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   const onPressFindAccounts = React.useCallback(() => {
     if (isWeb) {
@@ -36,11 +45,13 @@ export function FollowingEndOfFeed() {
     <View
       style={[
         styles.container,
-        pal.border,
-        {minHeight: Dimensions.get('window').height * 0.75},
+        {
+          minHeight: Dimensions.get('window').height * 0.75,
+          borderColor: theme.palette.contrast_100,
+        },
       ]}>
       <View style={styles.inner}>
-        <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+        <Text type="xl-medium" style={[s.textCenter, textStyle]}>
           <Trans>
             You've reached the end of your feed! Find some more accounts to
             follow.
@@ -50,29 +61,29 @@ export function FollowingEndOfFeed() {
           type="inverted"
           style={styles.emptyBtn}
           onPress={onPressFindAccounts}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Find accounts to follow</Trans>
+          <Text type="lg-medium" style={textStyleInverted}>
+            <Trans>Find accounts to follow </Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
+            style={textStyleInverted as FontAwesomeIconStyle}
             size={14}
           />
         </Button>
 
-        <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
+        <Text type="xl-medium" style={[s.textCenter, textStyle, s.mt20]}>
           <Trans>You can also discover new Custom Feeds to follow.</Trans>
         </Text>
         <Button
           type="inverted"
           style={[styles.emptyBtn, s.mt10]}
           onPress={onPressDiscoverFeeds}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Discover new custom feeds</Trans>
+          <Text type="lg-medium" style={textStyleInverted}>
+            <Trans>Discover new custom feeds </Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
+            style={textStyleInverted as FontAwesomeIconStyle}
             size={14}
           />
         </Button>

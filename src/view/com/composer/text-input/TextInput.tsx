@@ -22,7 +22,6 @@ import {downloadAndResize} from '#/lib/media/manip'
 import {isUriImage} from '#/lib/media/util'
 import {cleanError} from '#/lib/strings/errors'
 import {getMentionAt, insertMentionAt} from '#/lib/strings/mention-manip'
-import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isNative} from '#/platform/detection'
 import {
   type LinkFacetMatch,
@@ -30,6 +29,7 @@ import {
 } from '#/view/com/composer/text-input/text-input-util'
 import {atoms as a, useAlf} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Autocomplete} from './mobile/Autocomplete'
 import {type TextInputProps} from './TextInput.types'
 
@@ -52,7 +52,7 @@ export function TextInput({
   const {theme: t, fonts} = useAlf()
   const textInput = useRef<PasteInputRef>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
-  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
   const prevLength = useRef(richtext.length)
 
@@ -223,7 +223,7 @@ export function TextInput({
         onSelectionChange={onSelectionChange}
         placeholder={placeholder}
         placeholderTextColor={t.atoms.text_contrast_medium.color}
-        keyboardAppearance={theme.colorScheme}
+        keyboardAppearance={colorMode}
         autoFocus={true}
         allowFontScaling
         multiline

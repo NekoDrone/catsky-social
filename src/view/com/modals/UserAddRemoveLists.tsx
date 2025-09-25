@@ -2,14 +2,14 @@ import React, {useCallback} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
+  type TextStyle,
   useWindowDimensions,
   View,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {cleanError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -18,12 +18,14 @@ import {isAndroid, isMobileWeb, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {
   getMembership,
-  ListMembersip,
+  type ListMembersip,
   useDangerousListMembershipsQuery,
   useListMembershipAddMutation,
   useListMembershipRemoveMutation,
 } from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {MyLists} from '../lists/MyLists'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
@@ -45,11 +47,16 @@ export function Component({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {closeModal} = useModalControls()
-  const pal = usePalette('default')
   const {height: screenHeight} = useWindowDimensions()
   const {_} = useLingui()
   const {data: memberships} = useDangerousListMembershipsQuery()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   const onPressDone = useCallback(() => {
     closeModal()
@@ -57,13 +64,28 @@ export function Component({
 
   const listStyle = React.useMemo(() => {
     if (isMobileWeb) {
-      return [pal.border, {height: screenHeight / 2}]
+      return [
+        {
+          borderColor: theme.palette.contrast_100,
+        },
+        {height: screenHeight / 2},
+      ]
     } else if (isWeb) {
-      return [pal.border, {height: screenHeight / 1.5}]
+      return [
+        {
+          borderColor: theme.palette.contrast_100,
+        },
+        {height: screenHeight / 1.5},
+      ]
     }
 
-    return [pal.border, {flex: 1, borderTopWidth: StyleSheet.hairlineWidth}]
-  }, [pal.border, screenHeight])
+    return [
+      {
+        borderColor: theme.palette.contrast_100,
+      },
+      {flex: 1, borderTopWidth: StyleSheet.hairlineWidth},
+    ]
+  }, [theme, screenHeight])
 
   const headerStyles = [
     {
@@ -73,7 +95,7 @@ export function Component({
       marginBottom: 12,
       paddingHorizontal: 12,
     } as const,
-    pal.text,
+    textStyle,
   ]
 
   return (
@@ -104,7 +126,13 @@ export function Component({
         )}
         style={listStyle}
       />
-      <View style={[styles.btns, pal.border]}>
+      <View
+        style={[
+          styles.btns,
+          {
+            borderColor: theme.palette.contrast_100,
+          },
+        ]}>
         <Button
           testID="doneBtn"
           type="default"
@@ -137,7 +165,8 @@ function ListItem({
   onAdd?: (listUri: string) => void
   onRemove?: (listUri: string) => void
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const [isProcessing, setIsProcessing] = React.useState(false)
@@ -192,7 +221,9 @@ function ListItem({
       testID={`toggleBtn-${list.name}`}
       style={[
         styles.listItem,
-        pal.border,
+        {
+          borderColor: theme.palette.contrast_100,
+        },
         index !== 0 && {borderTopWidth: StyleSheet.hairlineWidth},
       ]}>
       <View style={styles.listItemAvi}>
@@ -201,12 +232,30 @@ function ListItem({
       <View style={styles.listItemContent}>
         <Text
           type="lg"
-          style={[s.bold, pal.text]}
+          style={[
+            s.bold,
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            },
+          ]}
           numberOfLines={1}
           lineHeight={1.2}>
           {sanitizeDisplayName(list.name)}
         </Text>
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        <Text
+          type="md"
+          style={[
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.white
+                  : theme.palette.black,
+            },
+          ]}
+          numberOfLines={1}>
           {list.purpose === 'app.bsky.graph.defs#curatelist' &&
             (list.creator.did === currentAccount?.did ? (
               <Trans>User list by you</Trans>

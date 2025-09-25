@@ -1,5 +1,5 @@
-import {useCallback} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
+import {type JSX, useCallback} from 'react'
+import {type GestureResponderEvent, type TextStyle, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {msg, plural, Trans} from '@lingui/macro'
@@ -15,7 +15,6 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {useGate} from '#/lib/statsig/statsig'
@@ -32,7 +31,8 @@ import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
@@ -57,7 +57,8 @@ type TabOptions = 'Home' | 'Search' | 'Messages' | 'Notifications' | 'MyProfile'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
   const {footerHeight} = useShellLayout()
@@ -76,6 +77,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const gate = useGate()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   const showSignIn = useCallback(() => {
     closeAllActiveElements()
@@ -147,8 +152,18 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       <Animated.View
         style={[
           styles.bottomBar,
-          pal.view,
-          hideBorder ? {borderColor: pal.view.backgroundColor} : pal.border,
+          {
+            backgroundColor:
+              colorMode === 'light' ? theme.palette.white : theme.palette.black,
+          },
+          hideBorder
+            ? {
+                borderColor:
+                  colorMode === 'light'
+                    ? theme.palette.white
+                    : theme.palette.black,
+              }
+            : {borderColor: theme.palette.contrast_100},
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
@@ -163,12 +178,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtHome ? (
                   <HomeFilled
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.homeIcon]}
                   />
                 ) : (
                   <Home
                     width={iconWidth + 1}
-                    style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.homeIcon]}
                   />
                 )
               }
@@ -183,13 +198,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtSearch ? (
                   <MagnifyingGlassFilled
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.searchIcon]}
                   />
                 ) : (
                   <MagnifyingGlass
                     testID="bottomBarSearchBtn"
                     width={iconWidth + 2}
-                    style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.searchIcon]}
                   />
                 )
               }
@@ -204,12 +219,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtMessages ? (
                   <MessageFilled
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.feedsIcon]}
                   />
                 ) : (
                   <Message
                     width={iconWidth - 1}
-                    style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.feedsIcon]}
                   />
                 )
               }
@@ -236,12 +251,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 isAtNotifications ? (
                   <BellFilled
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.bellIcon]}
                   />
                 ) : (
                   <Bell
                     width={iconWidth}
-                    style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
+                    style={[styles.ctrlIcon, textStyle, styles.bellIcon]}
                   />
                 )
               }
@@ -269,11 +284,11 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     <View
                       style={[
                         styles.ctrlIcon,
-                        pal.text,
+                        textStyle,
                         styles.profileIcon,
                         styles.onProfile,
                         {
-                          borderColor: pal.text.color,
+                          borderColor: textStyle.color,
                           borderWidth: live ? 0 : 1,
                         },
                       ]}>
@@ -291,7 +306,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     <View
                       style={[
                         styles.ctrlIcon,
-                        pal.text,
+                        textStyle,
                         styles.profileIcon,
                         {
                           borderWidth: live ? 0 : 1,
@@ -335,7 +350,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                 style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
                 <Logo width={28} />
                 <View style={{paddingTop: 4}}>
-                  <Logotype width={80} fill={pal.text.color} />
+                  <Logotype width={80} fill={textStyle.color} />
                 </View>
               </View>
 
@@ -347,7 +362,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   variant="solid"
                   color="primary">
                   <ButtonText>
-                    <Trans>Create account</Trans>
+                    <Trans>Create account </Trans>
                   </ButtonText>
                 </Button>
                 <Button
@@ -357,7 +372,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   variant="solid"
                   color="secondary">
                   <ButtonText>
-                    <Trans>Sign in</Trans>
+                    <Trans>Sign in </Trans>
                   </ButtonText>
                 </Button>
               </View>

@@ -17,7 +17,6 @@ import {useActorStatus} from '#/lib/actor-status'
 import {isReasonFeedSource, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -40,7 +39,8 @@ import {Link, TextLinkOnWebOnly} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {Text} from '#/view/com/util/text/Text'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
 import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {ContentHider} from '#/components/moderation/ContentHider'
@@ -167,7 +167,8 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const queryClient = useQueryClient()
   const {openComposer} = useOpenComposer()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
 
   const [hover, setHover] = useState(false)
@@ -247,7 +248,7 @@ let FeedItemInner = ({
   const outerStyles = [
     styles.outer,
     {
-      borderColor: pal.colors.border,
+      borderColor: theme.palette.contrast_100,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
           ? 8
@@ -308,7 +309,10 @@ let FeedItemInner = ({
                 styles.replyLine,
                 {
                   flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
+                  backgroundColor:
+                    colorMode === 'light'
+                      ? theme.palette.contrast_100
+                      : theme.palette.contrast_200,
                   marginBottom: 4,
                 },
               ]}
@@ -321,7 +325,12 @@ let FeedItemInner = ({
             <Link href={reason.href}>
               <Text
                 type="sm-bold"
-                style={pal.textLight}
+                style={{
+                  color:
+                    colorMode === 'dark'
+                      ? theme.palette.contrast_600
+                      : theme.palette.contrast_700,
+                }}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 <Trans context="from-feed">
@@ -332,7 +341,12 @@ let FeedItemInner = ({
                     href={reason.href}
                     lineHeight={1.2}
                     numberOfLines={1}
-                    style={pal.textLight}
+                    style={{
+                      color:
+                        colorMode === 'dark'
+                          ? theme.palette.contrast_600
+                          : theme.palette.contrast_700,
+                    }}
                   />
                 </Trans>
               </Text>
@@ -352,31 +366,52 @@ let FeedItemInner = ({
               }
               onBeforePress={onOpenReposter}>
               <RepostIcon
-                style={{color: pal.colors.textLight, marginRight: 3}}
+                style={{
+                  color:
+                    colorMode === 'dark'
+                      ? theme.palette.contrast_600
+                      : theme.palette.contrast_700,
+                  marginRight: 3,
+                }}
                 width={13}
                 height={13}
               />
               <Text
                 type="sm-bold"
-                style={pal.textLight}
+                style={{
+                  color:
+                    colorMode === 'dark'
+                      ? theme.palette.contrast_600
+                      : theme.palette.contrast_700,
+                }}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 {isOwner ? (
-                  <Trans>Reposted by you</Trans>
+                  <Trans> Reposted by you </Trans>
                 ) : (
                   <Trans>
                     Reposted by{' '}
                     <ProfileHoverCard did={reason.by.did}>
                       <TextLinkOnWebOnly
                         type="sm-bold"
-                        style={pal.textLight}
+                        style={{
+                          color:
+                            colorMode === 'dark'
+                              ? theme.palette.contrast_600
+                              : theme.palette.contrast_700,
+                        }}
                         lineHeight={1.2}
                         numberOfLines={1}
                         text={
                           <Text
                             emoji
                             type="sm-bold"
-                            style={pal.textLight}
+                            style={{
+                              color:
+                                colorMode === 'dark'
+                                  ? theme.palette.contrast_600
+                                  : theme.palette.contrast_700,
+                            }}
                             lineHeight={1.2}>
                             {sanitizeDisplayName(
                               reason.by.displayName ||
@@ -396,16 +431,27 @@ let FeedItemInner = ({
           ) : AppBskyFeedDefs.isReasonPin(reason) ? (
             <View style={styles.includeReason}>
               <PinIcon
-                style={{color: pal.colors.textLight, marginRight: 3}}
+                style={{
+                  color:
+                    colorMode === 'dark'
+                      ? theme.palette.contrast_600
+                      : theme.palette.contrast_700,
+                  marginRight: 3,
+                }}
                 width={13}
                 height={13}
               />
               <Text
                 type="sm-bold"
-                style={pal.textLight}
+                style={{
+                  color:
+                    colorMode === 'dark'
+                      ? theme.palette.contrast_600
+                      : theme.palette.contrast_700,
+                }}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>Pinned</Trans>
+                <Trans>Pinned </Trans>
               </Text>
             </View>
           ) : null}
@@ -428,7 +474,10 @@ let FeedItemInner = ({
                 styles.replyLine,
                 {
                   flexGrow: 1,
-                  backgroundColor: pal.colors.replyLine,
+                  backgroundColor:
+                    colorMode === 'light'
+                      ? theme.palette.contrast_100
+                      : theme.palette.contrast_200,
                   marginTop: live ? 8 : 4,
                 },
               ]}

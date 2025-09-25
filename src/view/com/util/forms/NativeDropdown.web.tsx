@@ -3,6 +3,7 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  type TextStyle,
   type View,
   type ViewStyle,
 } from 'react-native'
@@ -12,8 +13,8 @@ import {DropdownMenu} from 'radix-ui'
 import {type MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useTheme} from '#/lib/ThemeContext'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 
 // Custom Dropdown Menu Components
 // ==
@@ -22,9 +23,11 @@ export const DropdownMenuContent = DropdownMenu.Content
 
 type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
-  const theme = useTheme()
   const [focused, setFocused] = React.useState(false)
-  const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+  const backgroundColor =
+    colorMode === 'light' ? theme.palette.black : theme.palette.white
 
   return (
     <DropdownMenu.Item
@@ -161,14 +164,31 @@ function DropdownContent({
   menuRef,
 }: {
   items: DropdownItem[]
-  menuRef: React.RefObject<HTMLDivElement>
+  menuRef: React.RefObject<HTMLDivElement | null>
 }) {
-  const pal = usePalette('default')
   const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.view
+    colorMode === 'dark'
+      ? {
+          backgroundColor: theme.palette.contrast_25,
+        }
+      : {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        }
   const {borderColor: separatorColor} =
-    theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+    colorMode === 'dark'
+      ? {
+          borderColor: theme.palette.contrast_200,
+        }
+      : {
+          borderColor: theme.palette.contrast_100,
+        }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   return (
     <DropdownMenu.Content
@@ -200,14 +220,18 @@ function DropdownContent({
               <DropdownMenuItem
                 key={getKey(item.label, index, item.testID)}
                 onSelect={item.onPress}>
-                <Text selectable={false} style={[pal.text, styles.itemTitle]}>
+                <Text selectable={false} style={[textStyle, styles.itemTitle]}>
                   {item.label}
                 </Text>
                 {item.icon && (
                   <FontAwesomeIcon
                     icon={item.icon.web}
                     size={20}
-                    color={pal.colors.textLight}
+                    color={
+                      colorMode === 'light'
+                        ? theme.palette.white
+                        : theme.palette.black
+                    }
                   />
                 )}
               </DropdownMenuItem>
@@ -218,14 +242,18 @@ function DropdownContent({
           <DropdownMenuItem
             key={getKey(item.label, index, item.testID)}
             onSelect={item.onPress}>
-            <Text selectable={false} style={[pal.text, styles.itemTitle]}>
+            <Text selectable={false} style={[textStyle, styles.itemTitle]}>
               {item.label}
             </Text>
             {item.icon && (
               <FontAwesomeIcon
                 icon={item.icon.web}
                 size={20}
-                color={pal.colors.textLight}
+                color={
+                  colorMode === 'light'
+                    ? theme.palette.white
+                    : theme.palette.black
+                }
               />
             )}
           </DropdownMenuItem>

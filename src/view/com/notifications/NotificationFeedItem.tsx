@@ -33,7 +33,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {MAX_POST_LINES} from '#/lib/constants'
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {useAnimatedValue} from '#/lib/hooks/useAnimatedValue'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {forceLTR} from '#/lib/strings/bidi'
@@ -51,6 +50,7 @@ import {formatCount} from '#/view/com/util/numeric/format'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button, ButtonText} from '#/components/Button'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import {
@@ -94,7 +94,8 @@ let NotificationFeedItem = ({
   hideTopBorder?: boolean
 }): React.ReactNode => {
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const t = useTheme()
   const {_, i18n} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
@@ -200,8 +201,8 @@ let NotificationFeedItem = ({
           post={item.subject}
           style={
             isHighlighted && {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: theme.palette.primary_25,
+              borderColor: theme.palette.primary_100,
             }
           }
           hideTopBorder={hideTopBorder}
@@ -248,7 +249,7 @@ let NotificationFeedItem = ({
     : ''
 
   let a11yLabel = ''
-  let notificationContent: ReactElement
+  let notificationContent: ReactElement<any>
   let icon = (
     <HeartIconFilled
       size="xl"
@@ -281,7 +282,7 @@ let NotificationFeedItem = ({
         liked your post
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your post</Trans>
+      <Trans>{firstAuthorLink} liked your post </Trans>
     )
   } else if (item.type === 'repost') {
     a11yLabel = hasMultipleAuthors
@@ -305,7 +306,7 @@ let NotificationFeedItem = ({
         reposted your post
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} reposted your post</Trans>
+      <Trans>{firstAuthorLink} reposted your post </Trans>
     )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'follow') {
@@ -339,7 +340,7 @@ let NotificationFeedItem = ({
        * see `src/state/queries/notifications/util.ts`
        */
       a11yLabel = _(msg`${firstAuthorName} followed you back`)
-      notificationContent = <Trans>{firstAuthorLink} followed you back</Trans>
+      notificationContent = <Trans>{firstAuthorLink} followed you back </Trans>
     } else {
       a11yLabel = hasMultipleAuthors
         ? _(
@@ -362,7 +363,7 @@ let NotificationFeedItem = ({
           followed you
         </Trans>
       ) : (
-        <Trans>{firstAuthorLink} followed you</Trans>
+        <Trans>{firstAuthorLink} followed you </Trans>
       )
     }
     icon = <PersonPlusIcon size="xl" style={{color: t.palette.primary_500}} />
@@ -388,7 +389,7 @@ let NotificationFeedItem = ({
         liked your custom feed
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your custom feed</Trans>
+      <Trans>{firstAuthorLink} liked your custom feed </Trans>
     )
   } else if (item.type === 'starterpack-joined') {
     a11yLabel = hasMultipleAuthors
@@ -412,7 +413,7 @@ let NotificationFeedItem = ({
         signed up with your starter pack
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} signed up with your starter pack</Trans>
+      <Trans>{firstAuthorLink} signed up with your starter pack </Trans>
     )
     icon = (
       <View style={{height: 30, width: 30}}>
@@ -431,7 +432,16 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text
+          style={[
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            },
+            s.bold,
+          ]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -441,7 +451,7 @@ let NotificationFeedItem = ({
         verified you
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} verified you</Trans>
+      <Trans>{firstAuthorLink} verified you </Trans>
     )
     icon = <VerifiedCheck size="xl" />
   } else if (item.type === 'unverified') {
@@ -456,7 +466,16 @@ let NotificationFeedItem = ({
     notificationContent = hasMultipleAuthors ? (
       <Trans>
         {firstAuthorLink} and{' '}
-        <Text style={[pal.text, s.bold]}>
+        <Text
+          style={[
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            },
+            s.bold,
+          ]}>
           <Plural
             value={additionalAuthorsCount}
             one={`${formattedAuthorsCount} other`}
@@ -493,7 +512,7 @@ let NotificationFeedItem = ({
         liked your repost
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} liked your repost</Trans>
+      <Trans>{firstAuthorLink} liked your repost </Trans>
     )
   } else if (item.type === 'repost-via-repost') {
     a11yLabel = hasMultipleAuthors
@@ -517,7 +536,7 @@ let NotificationFeedItem = ({
         reposted your repost
       </Trans>
     ) : (
-      <Trans>{firstAuthorLink} reposted your repost</Trans>
+      <Trans>{firstAuthorLink} reposted your repost </Trans>
     )
     icon = <RepostIcon size="xl" style={{color: t.palette.positive_600}} />
   } else if (item.type === 'subscribed-post') {
@@ -574,8 +593,8 @@ let NotificationFeedItem = ({
         item.notification.isRead
           ? undefined
           : {
-              backgroundColor: pal.colors.unreadNotifBg,
-              borderColor: pal.colors.unreadNotifBorder,
+              backgroundColor: theme.palette.primary_25,
+              borderColor: theme.palette.primary_100,
             },
         !hideTopBorder && a.border_t,
         a.overflow_hidden,
@@ -728,7 +747,7 @@ function ExpandListPressable({
       </Pressable>
     )
   } else {
-    return <>{children}</>
+    return <>{children} </>
   }
 }
 
@@ -773,7 +792,7 @@ function SayHelloBtn({profile}: {profile: AppBskyActorDefs.ProfileView}) {
         }
       }}>
       <ButtonText>
-        <Trans>Say hello!</Trans>
+        <Trans>Say hello! </Trans>
       </ButtonText>
     </Button>
   )
@@ -809,7 +828,7 @@ function CondensedAuthorsList({
             style={[a.ml_xs, a.mr_md, t.atoms.text_contrast_high]}
           />
           <Text style={[a.text_md, t.atoms.text_contrast_high]}>
-            <Trans context="action">Hide</Trans>
+            <Trans context="action"> Hide </Trans>
           </Text>
         </TouchableOpacity>
       </View>

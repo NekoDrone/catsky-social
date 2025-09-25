@@ -7,7 +7,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ComposeIcon2} from '#/lib/icons'
 import {
@@ -33,6 +32,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {NoFollowingFeed} from '#/screens/Feeds/NoFollowingFeed'
 import {NoSavedFeedsOfAnyType} from '#/screens/Feeds/NoSavedFeedsOfAnyType'
 import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {ButtonIcon} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as FeedCard from '#/components/FeedCard'
@@ -104,7 +104,8 @@ type FlatlistSlice =
     }
 
 export function FeedsScreen(_props: Props) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {openComposer} = useOpenComposer()
   const {isMobile} = useWebMediaQueries()
   const [query, setQuery] = React.useState('')
@@ -423,9 +424,9 @@ export function FeedsScreen(_props: Props) {
         return (
           <View
             style={[
-              pal.border,
               {
                 borderBottomWidth: 1,
+                borderColor: theme.palette.contrast_100,
               },
             ]}>
             <NoSavedFeedsOfAnyType />
@@ -469,8 +470,15 @@ export function FeedsScreen(_props: Props) {
               paddingTop: 10,
               paddingBottom: '150%',
             }}>
-            <Text type="lg" style={pal.textLight}>
-              <Trans>No results found for "{query}"</Trans>
+            <Text
+              type="lg"
+              style={{
+                color:
+                  colorMode === 'dark'
+                    ? theme.palette.contrast_600
+                    : theme.palette.contrast_700,
+              }}>
+              <Trans>No results found for "{query}" </Trans>
             </Text>
           </View>
         )
@@ -478,9 +486,9 @@ export function FeedsScreen(_props: Props) {
         return (
           <View
             style={[
-              pal.border,
               {
                 borderBottomWidth: 1,
+                borderColor: theme.palette.contrast_100,
               },
             ]}>
             <NoFollowingFeed />
@@ -490,9 +498,9 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
+      colorMode,
+      theme,
       _,
-      pal.border,
-      pal.textLight,
       query,
       onChangeQuery,
       onPressCancelSearch,
@@ -508,7 +516,7 @@ export function FeedsScreen(_props: Props) {
           <Layout.Header.BackButton />
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Feeds</Trans>
+              <Trans>Feeds </Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
           <Layout.Header.Slot>
@@ -596,7 +604,7 @@ function FollowingFeed() {
                 height: 18,
               },
             ]}
-            fill={t.palette.white}
+            fill={t.palette.black}
           />
         </View>
         <FeedCard.TitleAndByline
@@ -701,7 +709,7 @@ function FeedsSavedHeader() {
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
-          <Trans>My Feeds</Trans>
+          <Trans>My Feeds </Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
           <Trans>All the feeds you've saved, right in one place.</Trans>
@@ -727,7 +735,7 @@ function FeedsAboutHeader() {
       />
       <View style={[a.flex_1, a.gap_sm]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_heavy, t.atoms.text]}>
-          <Trans>Discover New Feeds</Trans>
+          <Trans>Discover New Feeds </Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
           <Trans>

@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {TimesLarge_Stroke2_Corner0_Rounded} from './icons/Times'
@@ -13,8 +12,8 @@ export function SearchError({
   title?: string
   children?: React.ReactNode
 }) {
+  const theme = useTheme()
   const {gtMobile} = useBreakpoints()
-  const pal = usePalette('default')
 
   return (
     <Layout.Content>
@@ -27,7 +26,10 @@ export function SearchError({
             paddingVertical: 150,
           },
         ]}>
-        <TimesLarge_Stroke2_Corner0_Rounded width={32} fill={pal.colors.icon} />
+        <TimesLarge_Stroke2_Corner0_Rounded
+          width={32}
+          fill={theme.palette.contrast_500}
+        />
         <View
           style={[
             a.align_center,

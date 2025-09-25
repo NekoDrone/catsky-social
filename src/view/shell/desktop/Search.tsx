@@ -2,6 +2,7 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
+  type TextStyle,
   TouchableOpacity,
   View,
   type ViewStyle,
@@ -10,14 +11,14 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {Link} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {SearchInput} from '#/components/forms/SearchInput'
 
 let SearchLinkCard = ({
@@ -31,12 +32,21 @@ let SearchLinkCard = ({
   onPress?: () => void
   style?: ViewStyle
 }): React.ReactNode => {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   const inner = (
     <View
-      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
-      <Text type="md" style={[pal.text]}>
+      style={[
+        {borderColor: theme.palette.contrast_100},
+        {paddingVertical: 16, paddingHorizontal: 12},
+        style,
+      ]}>
+      <Text type="md" style={[textStyle]}>
         {label}
       </Text>
     </View>
@@ -57,11 +67,11 @@ let SearchLinkCard = ({
     <Link href={to} asAnchor anchorNoUnderline>
       <View
         style={[
-          pal.border,
+          {borderColor: theme.palette.contrast_100},
           {paddingVertical: 16, paddingHorizontal: 12},
           style,
         ]}>
-        <Text type="md" style={[pal.text]}>
+        <Text type="md" style={[textStyle]}>
           {label}
         </Text>
       </View>
@@ -73,7 +83,8 @@ export {SearchLinkCard}
 
 export function DesktopSearch() {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const navigation = useNavigation<NavigationProp>()
   const [isActive, setIsActive] = React.useState<boolean>(false)
   const [query, setQuery] = React.useState<string>('')
@@ -106,7 +117,14 @@ export function DesktopSearch() {
   }, [])
 
   return (
-    <View style={[styles.container, pal.view]}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        },
+      ]}>
       <SearchInput
         value={query}
         onChangeText={onChangeText}
@@ -116,8 +134,13 @@ export function DesktopSearch() {
       {query !== '' && isActive && moderationOpts && (
         <View
           style={[
-            pal.view,
-            pal.borderDark,
+            {
+              backgroundColor:
+                colorMode === 'light'
+                  ? theme.palette.white
+                  : theme.palette.black,
+              borderColor: theme.palette.contrast_200,
+            },
             styles.resultsContainer,
             a.overflow_hidden,
           ]}>

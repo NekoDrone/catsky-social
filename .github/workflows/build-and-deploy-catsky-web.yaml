@@ -1,0 +1,45 @@
+name: Build Catsky Web with Go and deploy to VPS
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      VPS_IP: ${{ secrets.VPS_IP }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Setup just
+        uses: extractions/setup-just@v3
+
+      - name: Setup ssh
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H ${{ secrets.VPS_IP }} >> ~/.ssh/known_hosts
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build web and transfer to VPS with just
+        run: just dist-build-web
+
+      - name: Trigger deployment script
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: ci
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: bash /tmp/catsky/seraphDeploy.sh

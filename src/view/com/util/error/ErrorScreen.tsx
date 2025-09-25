@@ -1,13 +1,13 @@
 import {View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwiseIcon} from '#/components/icons/ArrowRotateCounterClockwise'
 import * as Layout from '#/components/Layout'
@@ -29,7 +29,7 @@ export function ErrorScreen({
   showHeader?: boolean
 }) {
   const t = useTheme()
-  const pal = usePalette('default')
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
 
   return (
@@ -39,7 +39,7 @@ export function ErrorScreen({
           <Layout.Header.BackButton />
           <Layout.Header.Content>
             <Layout.Header.TitleText>
-              <Trans>Error</Trans>
+              <Trans>Error </Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
           <Layout.Header.Slot />
@@ -57,7 +57,12 @@ export function ErrorScreen({
             ]}>
             <FontAwesomeIcon
               icon="exclamation"
-              style={pal.textInverted as FontAwesomeIconStyle}
+              style={
+                {
+                  color:
+                    colorMode === 'light' ? t.palette.white : t.palette.black,
+                } as FontAwesomeIconStyle
+              }
               size={24}
             />
           </View>
@@ -65,7 +70,7 @@ export function ErrorScreen({
         <Text style={[a.text_center, a.font_heavy, a.text_2xl, a.mb_md]}>
           {title}
         </Text>
-        <Text style={[a.text_center, a.text_md, a.mb_xl]}>{message}</Text>
+        <Text style={[a.text_center, a.text_md, a.mb_xl]}> {message} </Text>
         {details && (
           <View
             style={[
@@ -100,7 +105,7 @@ export function ErrorScreen({
               )}>
               <ButtonIcon icon={ArrowRotateCounterClockwiseIcon} />
               <ButtonText>
-                <Trans context="action">Try again</Trans>
+                <Trans context="action"> Try again </Trans>
               </ButtonText>
             </Button>
           </View>

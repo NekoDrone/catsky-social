@@ -5,22 +5,23 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
+  type TextStyle,
   TouchableOpacity,
+  useColorScheme,
   View,
+  type ViewStyle,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {type AppBskyGraphDefs, RichText as RichTextAPI} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {enforceLen} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {colors, gradients, s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
 import {type ImageMeta} from '#/state/gallery'
 import {useModalControls} from '#/state/modals'
 import {
@@ -32,6 +33,8 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {EditableUserAvatar} from '#/view/com/util/UserAvatar'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -50,8 +53,8 @@ export function Component({
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [error, setError] = useState<string>('')
-  const pal = usePalette('default')
   const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const listCreateMutation = useListCreateMutation()
   const listMetadataMutation = useListMetadataMutation()
@@ -92,6 +95,25 @@ export function Component({
     return shortenLinks(descriptionRt).graphemeLength
   }, [descriptionRt])
   const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
+
+  const colorScheme = useColorScheme() ?? 'default'
+
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleLight: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const borderStyle: ViewStyle = {
+    borderColor: theme.palette.contrast_100,
+  }
 
   const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
   const [newAvatar, setNewAvatar] = useState<ImageMeta | undefined | null>()
@@ -211,13 +233,13 @@ export function Component({
     <KeyboardAvoidingView behavior="height">
       <ScrollView
         style={[
-          pal.view,
+          viewStyle,
           {
             paddingHorizontal: isMobile ? 16 : 0,
           },
         ]}
         testID="createOrEditListModal">
-        <Text style={[styles.title, pal.text]}>
+        <Text style={[styles.title, textStyle]}>
           {isCurateList ? (
             list ? (
               <Trans>Edit User List</Trans>
@@ -235,10 +257,19 @@ export function Component({
             <ErrorMessage message={error} />
           </View>
         )}
-        <Text style={[styles.label, pal.text]}>
+        <Text style={[styles.label, textStyle]}>
           <Trans>List Avatar</Trans>
         </Text>
-        <View style={[styles.avi, {borderColor: pal.colors.background}]}>
+        <View
+          style={[
+            styles.avi,
+            {
+              borderColor:
+                colorMode === 'light'
+                  ? theme.palette.white
+                  : theme.palette.black,
+            },
+          ]}>
           <EditableUserAvatar
             type="list"
             size={80}
@@ -249,13 +280,13 @@ export function Component({
         <View style={styles.form}>
           <View>
             <View style={styles.labelWrapper}>
-              <Text style={[styles.label, pal.text]} nativeID="list-name">
+              <Text style={[styles.label, textStyle]} nativeID="list-name">
                 <Trans>List Name</Trans>
               </Text>
             </View>
             <TextInput
               testID="editNameInput"
-              style={[styles.textInput, pal.border, pal.text]}
+              style={[styles.textInput, borderStyle, textStyle]}
               placeholder={
                 isCurateList
                   ? _(msg`e.g. Great Posters`)
@@ -273,25 +304,25 @@ export function Component({
           <View style={s.pb10}>
             <View style={styles.labelWrapper}>
               <Text
-                style={[styles.label, pal.text]}
+                style={[styles.label, textStyle]}
                 nativeID="list-description">
                 <Trans>Description</Trans>
               </Text>
               <Text
-                style={[!isDescriptionOver ? pal.textLight : s.red3, s.f13]}>
-                {graphemeLength}/{MAX_DESCRIPTION}
+                style={[!isDescriptionOver ? textStyleLight : s.red3, s.f13]}>
+                {graphemeLength} / {MAX_DESCRIPTION}
               </Text>
             </View>
             <TextInput
               testID="editDescriptionInput"
-              style={[styles.textArea, pal.border, pal.text]}
+              style={[styles.textArea, borderStyle, textStyle]}
               placeholder={
                 isCurateList
                   ? _(msg`e.g. The posters who never miss.`)
                   : _(msg`e.g. Users that repeatedly reply with ads.`)
               }
               placeholderTextColor={colors.gray4}
-              keyboardAppearance={theme.colorScheme}
+              keyboardAppearance={colorScheme}
               multiline
               value={descriptionRt.text}
               onChangeText={onDescriptionChange}
@@ -334,7 +365,7 @@ export function Component({
             accessibilityHint=""
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>
-              <Text style={[s.black, s.bold, pal.text]}>
+              <Text style={[s.black, s.bold, textStyle]}>
                 <Trans context="action">Cancel</Trans>
               </Text>
             </View>

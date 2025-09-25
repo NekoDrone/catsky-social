@@ -23,10 +23,9 @@ import {
 } from 'react-native'
 import Animated from 'react-native-reanimated'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {addStyle} from '#/lib/styles'
-import {useLayoutBreakpoints} from '#/alf'
+import {useLayoutBreakpoints, useTheme} from '#/alf'
 import {useDialogContext} from '#/components/Dialog'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 
@@ -47,7 +46,7 @@ export const CenteredView = React.forwardRef(function CenteredView(
   >,
   ref: React.Ref<View>,
 ) {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinDialog} = useDialogContext()
@@ -61,7 +60,9 @@ export const CenteredView = React.forwardRef(function CenteredView(
     style = addStyle(style, {
       borderTopWidth: 1,
     })
-    style = addStyle(style, pal.border)
+    style = addStyle(style, {
+      borderColor: theme.palette.contrast_100,
+    })
   }
   return <View ref={ref} style={style} {...props} />
 })

@@ -1,5 +1,5 @@
-import {useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {type JSX, useCallback, useMemo, useState} from 'react'
+import {StyleSheet, type TextStyle, View} from 'react-native'
 import {type AppBskyActorDefs} from '@atproto/api'
 import {msg, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -8,7 +8,6 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 import {useActorStatus} from '#/lib/actor-status'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -33,6 +32,7 @@ import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {atoms as a, tokens, useLayoutBreakpoints, useTheme, web} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/ArrowBoxLeft'
@@ -471,7 +471,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                   top: '-10%',
                   left: count.length === 1 ? 12 : 8,
                   backgroundColor: t.palette.primary_500,
-                  color: t.palette.white,
+                  color: t.palette.black,
                   lineHeight: a.text_sm.fontSize,
                   paddingHorizontal: 4,
                   paddingVertical: 1,
@@ -585,9 +585,14 @@ function ComposeBtn() {
 }
 
 function ChatNavItem() {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const numUnreadMessages = useUnreadMessageCount()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   return (
     <NavItem
@@ -595,11 +600,11 @@ function ChatNavItem() {
       count={numUnreadMessages.numUnread}
       hasNew={numUnreadMessages.hasNew}
       icon={
-        <Message style={pal.text} aria-hidden={true} width={NAV_ICON_WIDTH} />
+        <Message style={textStyle} aria-hidden={true} width={NAV_ICON_WIDTH} />
       }
       iconFilled={
         <MessageFilled
-          style={pal.text}
+          style={textStyle}
           aria-hidden={true}
           width={NAV_ICON_WIDTH}
         />
@@ -611,13 +616,18 @@ function ChatNavItem() {
 
 export function DesktopLeftNav() {
   const {hasSession, currentAccount} = useSession()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const {isDesktop} = useWebMediaQueries()
   const {leftNavMinimal, centerColumnOffset} = useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
   const hasHomeBadge = useHomeBadge()
   const gate = useGate()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   if (!hasSession && !isDesktop) {
     return null
@@ -658,14 +668,14 @@ export function DesktopLeftNav() {
               <Home
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             iconFilled={
               <HomeFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             label={_(msg`Home`)}
@@ -674,14 +684,14 @@ export function DesktopLeftNav() {
             href="/search"
             icon={
               <MagnifyingGlass
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <MagnifyingGlassFilled
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -695,14 +705,14 @@ export function DesktopLeftNav() {
               <Bell
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             iconFilled={
               <BellFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             label={_(msg`Notifications`)}
@@ -712,14 +722,14 @@ export function DesktopLeftNav() {
             href="/feeds"
             icon={
               <Hashtag
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <HashtagFilled
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -730,14 +740,14 @@ export function DesktopLeftNav() {
             href="/lists"
             icon={
               <List
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <ListFilled
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -748,14 +758,14 @@ export function DesktopLeftNav() {
             href="/saved"
             icon={
               <Bookmark
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
             }
             iconFilled={
               <BookmarkFilled
-                style={pal.text}
+                style={textStyle}
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
               />
@@ -773,14 +783,14 @@ export function DesktopLeftNav() {
               <UserCircle
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             iconFilled={
               <UserCircleFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             label={_(msg`Profile`)}
@@ -791,14 +801,14 @@ export function DesktopLeftNav() {
               <Settings
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             iconFilled={
               <SettingsFilled
                 aria-hidden={true}
                 width={NAV_ICON_WIDTH}
-                style={pal.text}
+                style={textStyle}
               />
             }
             label={_(msg`Settings`)}

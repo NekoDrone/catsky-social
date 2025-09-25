@@ -4,7 +4,6 @@ import {type AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
 import {useActorSearch} from '#/state/queries/actor-search'
 import {usePopularFeedsSearch} from '#/state/queries/feed'
@@ -193,7 +192,6 @@ let SearchScreenPostResults = ({
     hasNextPage,
   } = useSearchPostsQuery({query: augmentedQuery, sort, enabled: active})
 
-  const pal = usePalette('default')
   const t = useTheme()
   const onPullToRefresh = useCallback(async () => {
     setIsPTR(true)
@@ -254,7 +252,7 @@ let SearchScreenPostResults = ({
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
           <Trans>
             <InlineLinkText
-              style={[pal.link]}
+              style={[{color: t.palette.primary_500}]}
               label={_(msg`Sign in`)}
               to={'#'}
               onPress={showSignIn}>
@@ -262,7 +260,7 @@ let SearchScreenPostResults = ({
             </InlineLinkText>
             <Text style={t.atoms.text_contrast_medium}> or </Text>
             <InlineLinkText
-              style={[pal.link]}
+              style={[{color: t.palette.primary_500}]}
               label={_(msg`Create an account`)}
               to={'#'}
               onPress={showCreateAccount}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {Pressable, type TextStyle, View} from 'react-native'
 import Animated, {
   measure,
   type MeasuredDimensions,
@@ -12,7 +12,6 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -23,6 +22,8 @@ import {TextLink} from '#/view/com/util/Link'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar, type UserAvatarType} from '#/view/com/util/UserAvatar'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {StarterPack} from '#/components/icons/StarterPack'
 import * as Layout from '#/components/Layout'
 
@@ -55,9 +56,17 @@ export function ProfileSubpageHeader({
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const {openLightbox} = useLightboxControls()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const canGoBack = navigation.canGoBack()
   const aviRef = useAnimatedRef()
+
+  const textLightStyle: TextStyle = {
+    color:
+      colorMode === 'dark'
+        ? theme.palette.contrast_600
+        : theme.palette.contrast_700,
+  }
 
   const _openLightbox = React.useCallback(
     (uri: string, thumbRect: MeasuredDimensions | null) => {
@@ -142,7 +151,13 @@ export function ProfileSubpageHeader({
               testID="headerTitle"
               type="title-xl"
               href={href}
-              style={[pal.text, {fontWeight: '600'}]}
+              style={{
+                fontWeight: '600',
+                color:
+                  colorMode === 'light'
+                    ? theme.palette.black
+                    : theme.palette.white,
+              }}
               text={title || ''}
               onPress={emitSoftReset}
               numberOfLines={4}
@@ -152,7 +167,7 @@ export function ProfileSubpageHeader({
           {isLoading || !creator ? (
             <LoadingPlaceholder width={50} height={8} />
           ) : (
-            <Text type="lg" style={[pal.textLight]} numberOfLines={1}>
+            <Text type="lg" style={textLightStyle} numberOfLines={1}>
               {purpose === 'app.bsky.graph.defs#curatelist' ? (
                 isOwner ? (
                   <Trans>List by you</Trans>
@@ -162,7 +177,7 @@ export function ProfileSubpageHeader({
                     <TextLink
                       text={sanitizeHandle(creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
-                      style={pal.textLight}
+                      style={textLightStyle}
                     />
                   </Trans>
                 )
@@ -175,7 +190,7 @@ export function ProfileSubpageHeader({
                     <TextLink
                       text={sanitizeHandle(creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
-                      style={pal.textLight}
+                      style={textLightStyle}
                     />
                   </Trans>
                 )
@@ -188,7 +203,7 @@ export function ProfileSubpageHeader({
                     <TextLink
                       text={sanitizeHandle(creator.handle || '', '@')}
                       href={makeProfileLink(creator)}
-                      style={pal.textLight}
+                      style={textLightStyle}
                     />
                   </Trans>
                 )

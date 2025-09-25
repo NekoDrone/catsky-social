@@ -34,16 +34,12 @@ build-android-gradle: prebuild-android
 
 [group('build')]
 postbuild-web:
-    # build system outputs some srcs and hrefs like src="static/"
-    # need to rewrite to be src="/static/" to handle non root pages
-    sed -i 's/\(src\|href\)="static/\1="\/static/g' web-build/index.html
-
-    # we need to copy the static iframe html to support youtube embeds
-    cp -r bskyweb/static/iframe/ web-build/iframe
-
-    # copy our static pages over!
-    cp -r deer-static-about web-build/about
-
+    # after doing the expo web build, we compress the bskyweb folder and send it to vps.
+    # no need to build the go binary as we'll do that on vps.
+    tar -czf catskyweb.tar.gz bskyweb/
+    rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" catskyweb.tar.gz ci@${VPS_IP}:/tmp/catsky/
+    rsync -avz -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no" scripts/seraphDeploy.sh ci@${VPS_IP}:/tmp/catsky/
+    
 [group('dev')]
 dev-android-setup: prebuild-android
     yarn android

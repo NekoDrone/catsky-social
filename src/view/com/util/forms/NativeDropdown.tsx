@@ -3,6 +3,7 @@ import {
   Platform,
   Pressable,
   StyleSheet,
+  type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -11,9 +12,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from 'zeego/dropdown-menu'
 import {type MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useTheme} from '#/lib/ThemeContext'
 import {isIOS} from '#/platform/detection'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Portal} from '#/components/Portal'
 
 // Custom Dropdown Menu Components
@@ -43,7 +44,8 @@ type TriggerProps = Omit<
 export const DropdownMenuTrigger = DropdownMenu.create(
   (props: TriggerProps) => {
     const theme = useTheme()
-    const defaultCtrlColor = theme.palette.default.postCtrl
+
+    const defaultCtrlColor = theme.palette.contrast_500
 
     return (
       // This Pressable doesn't actually do anything other than
@@ -80,8 +82,10 @@ type ItemProps = React.ComponentProps<(typeof DropdownMenu)['Item']>
 export const DropdownMenuItem = DropdownMenu.create(
   (props: ItemProps & {testID?: string}) => {
     const theme = useTheme()
+    const colorMode = useColorModeTheme()
     const [focused, setFocused] = React.useState(false)
-    const backgroundColor = theme.colorScheme === 'dark' ? '#fff1' : '#0001'
+    const backgroundColor =
+      colorMode === 'light' ? theme.palette.black : theme.palette.white
 
     return (
       <DropdownMenu.Item
@@ -107,11 +111,20 @@ type TitleProps = React.ComponentProps<(typeof DropdownMenu)['ItemTitle']>
  */
 export const DropdownMenuItemTitle = DropdownMenu.create(
   (props: TitleProps) => {
-    const pal = usePalette('default')
+    const theme = useTheme()
+    const colorMode = useColorModeTheme()
+
     return (
       <DropdownMenu.ItemTitle
         {...props}
-        style={[props.style, pal.text, styles.itemTitle]}
+        style={[
+          props.style,
+          {
+            color:
+              colorMode === 'light' ? theme.palette.black : theme.palette.white,
+          },
+          styles.itemTitle,
+        ]}
       />
     )
   },
@@ -132,10 +145,16 @@ type SeparatorProps = React.ComponentProps<(typeof DropdownMenu)['Separator']>
  */
 export const DropdownMenuSeparator = DropdownMenu.create(
   (props: SeparatorProps) => {
-    const pal = usePalette('default')
     const theme = useTheme()
+    const colorMode = useColorModeTheme()
     const {borderColor: separatorColor} =
-      theme.colorScheme === 'dark' ? pal.borderDark : pal.border
+      colorMode === 'dark'
+        ? {
+            borderColor: theme.palette.contrast_200,
+          }
+        : {
+            borderColor: theme.palette.contrast_100,
+          }
     return (
       <DropdownMenu.Separator
         {...props}
@@ -185,11 +204,16 @@ export function NativeDropdown({
   accessibilityLabel,
   accessibilityHint,
 }: React.PropsWithChildren<Props>) {
-  const pal = usePalette('default')
   const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const [isOpen, setIsOpen] = React.useState(false)
-  const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
+  const dropDownBackgroundColor = {
+    backgroundColor: theme.palette.contrast_25,
+  }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   return (
     <>
@@ -234,7 +258,7 @@ export function NativeDropdown({
                         <FontAwesomeIcon
                           icon={item.icon.web}
                           size={20}
-                          style={[pal.text]}
+                          style={[textStyle]}
                         />
                       </DropdownMenuItemIcon>
                     )}
@@ -255,7 +279,7 @@ export function NativeDropdown({
                     <FontAwesomeIcon
                       icon={item.icon.web}
                       size={20}
-                      style={[pal.text]}
+                      style={[textStyle]}
                     />
                   </DropdownMenuItemIcon>
                 )}

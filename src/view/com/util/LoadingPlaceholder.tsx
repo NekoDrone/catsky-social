@@ -7,10 +7,9 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
-import {atoms as a, useTheme as useTheme_NEW} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
@@ -35,7 +34,7 @@ export function LoadingPlaceholder({
         {
           width,
           height,
-          backgroundColor: theme.palette.default.backgroundLight,
+          backgroundColor: theme.palette.contrast_25,
         },
         style,
       ]}
@@ -48,10 +47,18 @@ export function PostLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const t = useTheme_NEW()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   return (
-    <View style={[styles.post, pal.view, style]}>
+    <View
+      style={[
+        styles.post,
+        {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        },
+        style,
+      ]}>
       <LoadingPlaceholder
         width={42}
         height={42}
@@ -74,7 +81,7 @@ export function PostLoadingPlaceholder({
               <Bubble
                 style={[
                   {
-                    color: t.palette.contrast_500,
+                    color: theme.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -87,7 +94,7 @@ export function PostLoadingPlaceholder({
               <Repost
                 style={[
                   {
-                    color: t.palette.contrast_500,
+                    color: theme.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -100,7 +107,7 @@ export function PostLoadingPlaceholder({
               <HeartIconOutline
                 style={[
                   {
-                    color: t.palette.contrast_500,
+                    color: theme.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -137,14 +144,20 @@ export function NotificationLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   return (
-    <View style={[styles.notification, pal.view, style]}>
+    <View
+      style={[
+        styles.notification,
+        {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        },
+        style,
+      ]}>
       <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
-        <HeartIconFilled
-          size="xl"
-          style={{color: pal.colors.backgroundLight}}
-        />
+        <HeartIconFilled size="xl" style={{color: theme.palette.contrast_25}} />
       </View>
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
@@ -184,9 +197,18 @@ export function ProfileCardLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   return (
-    <View style={[styles.profileCard, pal.view, style]}>
+    <View
+      style={[
+        styles.profileCard,
+        {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        },
+        style,
+      ]}>
       <LoadingPlaceholder
         width={40}
         height={40}
@@ -228,7 +250,8 @@ export function FeedLoadingPlaceholder({
   showTopBorder?: boolean
   showLowerPlaceholder?: boolean
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   return (
     <View
       style={[
@@ -236,10 +259,17 @@ export function FeedLoadingPlaceholder({
           padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
-        pal.border,
+        {borderColor: theme.palette.contrast_100},
         style,
       ]}>
-      <View style={[pal.view, {flexDirection: 'row'}]}>
+      <View
+        style={[
+          {
+            backgroundColor:
+              colorMode === 'light' ? theme.palette.white : theme.palette.black,
+          },
+          {flexDirection: 'row'},
+        ]}>
         <LoadingPlaceholder
           width={36}
           height={36}
@@ -282,10 +312,11 @@ export function ChatListItemLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const t = useTheme_NEW()
+  const theme = useTheme()
   const random = useMemo(() => Math.random(), [])
   return (
-    <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
+    <View
+      style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, theme.atoms.bg, style]}>
       <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
       <View>
         <LoadingPlaceholder width={140} height={12} style={a.mt_xs} />

@@ -69,7 +69,6 @@ import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIX
 import {useAppState} from '#/lib/hooks/useAppState'
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {mimeToExt} from '#/lib/media/video/util'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -121,6 +120,7 @@ import {VideoTranscodeProgress} from '#/view/com/composer/videos/VideoTranscodeP
 import {Text} from '#/view/com/util/text/Text'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, native, useTheme, web} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
 import {EmojiArc_Stroke2_Corner0_Rounded as EmojiSmileIcon} from '#/components/icons/Emoji'
@@ -174,7 +174,7 @@ export const ComposePost = ({
   videoUri: initVideoUri,
   cancelRef,
 }: Props & {
-  cancelRef?: React.RefObject<CancelRef>
+  cancelRef?: React.RefObject<CancelRef | null>
 }) => {
   const {currentAccount} = useSession()
   const agent = useAgent()
@@ -994,7 +994,8 @@ function ComposerTopBar({
   topBarAnimatedStyle: StyleProp<ViewStyle>
   children?: React.ReactNode
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   return (
     <Animated.View
@@ -1019,7 +1020,15 @@ function ComposerTopBar({
         <View style={a.flex_1} />
         {isPublishing ? (
           <>
-            <Text style={pal.textLight}>{publishingStage}</Text>
+            <Text
+              style={{
+                color:
+                  colorMode === 'light'
+                    ? theme.palette.white
+                    : theme.palette.black,
+              }}>
+              {publishingStage}
+            </Text>
             <View style={styles.postBtn}>
               <ActivityIndicator />
             </View>
@@ -1085,9 +1094,16 @@ function ComposerTopBar({
 }
 
 function AltTextReminder({error}: {error: string}) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   return (
-    <View style={[styles.reminderLine, pal.viewLight]}>
+    <View
+      style={[
+        styles.reminderLine,
+        {
+          backgroundColor: theme.palette.contrast_25,
+        },
+      ]}>
       <View style={styles.errorIcon}>
         <FontAwesomeIcon
           icon="exclamation"
@@ -1095,7 +1111,16 @@ function AltTextReminder({error}: {error: string}) {
           size={10}
         />
       </View>
-      <Text style={[pal.text, a.flex_1]}>{error}</Text>
+      <Text
+        style={[
+          {
+            color:
+              colorMode === 'light' ? theme.palette.black : theme.palette.white,
+          },
+          a.flex_1,
+        ]}>
+        {error}
+      </Text>
     </View>
   )
 }

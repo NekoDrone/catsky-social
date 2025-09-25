@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, type TextStyle, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
@@ -10,7 +10,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {ComposeIcon2} from '#/lib/icons'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -45,6 +44,8 @@ import {
   ProfileFeedHeader,
   ProfileFeedHeaderSkeleton,
 } from '#/screens/Profile/components/ProfileFeedHeader'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as Layout from '#/components/Layout'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
@@ -56,9 +57,14 @@ export function ProfileFeedScreen(props: Props) {
         feedCacheKey: props.route.params.feedCacheKey,
       }
     : undefined
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
 
   const uri = useMemo(
     () => makeRecordUri(handleOrDid, 'app.bsky.feed.generator', rkey),
@@ -78,11 +84,21 @@ export function ProfileFeedScreen(props: Props) {
     return (
       <Layout.Screen testID="profileFeedScreenError">
         <Layout.Content>
-          <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-            <Text type="title-lg" style={[pal.text, s.mb10]}>
-              <Trans>Could not load feed</Trans>
+          <View
+            style={[
+              {
+                borderColor: theme.palette.contrast_100,
+                backgroundColor:
+                  colorMode === 'light'
+                    ? theme.palette.white
+                    : theme.palette.black,
+              },
+              styles.notFoundContainer,
+            ]}>
+            <Text type="title-lg" style={[textStyle, s.mb10]}>
+              <Trans>Could not load feed </Trans>
             </Text>
-            <Text type="md" style={[pal.text, s.mb20]}>
+            <Text type="md" style={[textStyle, s.mb20]}>
               {error.toString()}
             </Text>
 
@@ -93,8 +109,8 @@ export function ProfileFeedScreen(props: Props) {
                 accessibilityHint={_(msg`Returns to previous page`)}
                 onPress={onPressBack}
                 style={{flexShrink: 1}}>
-                <Text type="button" style={pal.text}>
-                  <Trans>Go Back</Trans>
+                <Text type="button" style={textStyle}>
+                  <Trans>Go Back </Trans>
                 </Text>
               </Button>
             </View>

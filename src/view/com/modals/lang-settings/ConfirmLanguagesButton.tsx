@@ -3,9 +3,9 @@ import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {colors, gradients, s} from '#/lib/styles'
+import {useTheme} from '#/alf'
 
 export const ConfirmLanguagesButton = ({
   onPress,
@@ -14,14 +14,14 @@ export const ConfirmLanguagesButton = ({
   onPress: () => void
   extraText?: string
 }) => {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   return (
     <View
       style={[
         styles.btnContainer,
-        pal.borderDark,
+        {borderColor: theme.palette.contrast_200},
         isMobile && {
           paddingBottom: 40,
           borderTopWidth: 1,

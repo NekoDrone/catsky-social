@@ -1,13 +1,13 @@
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {type StyleProp, StyleSheet, View, type ViewStyle} from 'react-native'
+import {type IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {UserGroupIcon} from '#/lib/icons'
+import {useTheme} from '#/alf'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
 import {Text} from './text/Text'
 
@@ -22,7 +22,7 @@ export function EmptyState({
   message: string
   style?: StyleProp<ViewStyle>
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const iconSize = isTabletOrDesktop ? 64 : 48
   return (
@@ -31,21 +31,25 @@ export function EmptyState({
         style={[
           styles.iconContainer,
           isTabletOrDesktop && styles.iconContainerBig,
-          pal.viewLight,
+          {backgroundColor: theme.palette.contrast_25},
         ]}>
         {icon === 'user-group' ? (
           <UserGroupIcon size={iconSize} />
         ) : icon === 'growth' ? (
-          <Growth width={iconSize} fill={pal.colors.emptyStateIcon} />
+          <Growth width={iconSize} fill={theme.palette.contrast_300} />
         ) : (
           <FontAwesomeIcon
             icon={icon}
             size={iconSize}
-            style={[{color: pal.colors.emptyStateIcon} as FontAwesomeIconStyle]}
+            style={[
+              {color: theme.palette.contrast_300} as FontAwesomeIconStyle,
+            ]}
           />
         )}
       </View>
-      <Text type="xl" style={[{color: pal.colors.textLight}, styles.text]}>
+      <Text
+        type="xl"
+        style={[{color: theme.palette.contrast_600}, styles.text]}>
         {message}
       </Text>
     </View>

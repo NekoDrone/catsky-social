@@ -1,24 +1,32 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, type TextStyle, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function FollowingEmptyState() {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const navigation = useNavigation<NavigationProp>()
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+  const textStyleInverted: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   const onPressFindAccounts = React.useCallback(() => {
     if (isWeb) {
@@ -37,9 +45,9 @@ export function FollowingEmptyState() {
     <View style={styles.container}>
       <View style={styles.inner}>
         <View style={styles.iconContainer}>
-          <MagnifyingGlassIcon style={[styles.icon, pal.text]} size={62} />
+          <MagnifyingGlassIcon style={[styles.icon, textStyle]} size={62} />
         </View>
-        <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+        <Text type="xl-medium" style={[s.textCenter, textStyle]}>
           <Trans>
             Your following feed is empty! Follow more users to see what's
             happening.
@@ -49,29 +57,29 @@ export function FollowingEmptyState() {
           type="inverted"
           style={styles.emptyBtn}
           onPress={onPressFindAccounts}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Find accounts to follow</Trans>
+          <Text type="lg-medium" style={textStyleInverted}>
+            <Trans>Find accounts to follow </Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
+            style={textStyleInverted as FontAwesomeIconStyle}
             size={14}
           />
         </Button>
 
-        <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
+        <Text type="xl-medium" style={[s.textCenter, textStyle, s.mt20]}>
           <Trans>You can also discover new Custom Feeds to follow.</Trans>
         </Text>
         <Button
           type="inverted"
           style={[styles.emptyBtn, s.mt10]}
           onPress={onPressDiscoverFeeds}>
-          <Text type="lg-medium" style={palInverted.text}>
-            <Trans>Discover new custom feeds</Trans>
+          <Text type="lg-medium" style={textStyleInverted}>
+            <Trans>Discover new custom feeds </Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"
-            style={palInverted.text as FontAwesomeIconStyle}
+            style={textStyleInverted as FontAwesomeIconStyle}
             size={14}
           />
         </Button>

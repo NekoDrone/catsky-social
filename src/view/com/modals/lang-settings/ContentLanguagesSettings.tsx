@@ -1,8 +1,7 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, type TextStyle, View, type ViewStyle} from 'react-native'
 import {Trans} from '@lingui/macro'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {deviceLanguageCodes} from '#/locale/deviceLocales'
 import {languageName} from '#/locale/helpers'
@@ -11,6 +10,8 @@ import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {Text} from '../../util/text/Text'
 import {ScrollView} from '../util'
@@ -23,11 +24,25 @@ export function Component({}: {}) {
   const {closeModal} = useModalControls()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
     closeModal()
   }, [closeModal])
+
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleLight: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   const languages = React.useMemo(() => {
     const langs = LANGUAGES.filter(
@@ -61,7 +76,7 @@ export function Component({}: {}) {
     <View
       testID="contentLanguagesModal"
       style={[
-        pal.view,
+        viewStyle,
         styles.container,
         // @ts-ignore vh is web only
         isMobile
@@ -72,15 +87,15 @@ export function Component({}: {}) {
               maxHeight: '90vh',
             },
       ]}>
-      <Text style={[pal.text, styles.title]}>
+      <Text style={[textStyle, styles.title]}>
         <Trans>Content Languages</Trans>
       </Text>
-      <Text style={[pal.text, styles.description]}>
+      <Text style={[textStyle, styles.description]}>
         <Trans>
           Which languages would you like to see in your algorithmic feeds?
         </Trans>
       </Text>
-      <Text style={[pal.textLight, styles.description]}>
+      <Text style={[textStyleLight, styles.description]}>
         <Trans>Leave them all unselected to see any language.</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>

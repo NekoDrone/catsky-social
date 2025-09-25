@@ -267,11 +267,11 @@ describe('toShortUrl', () => {
 })
 
 describe('toShareUrl', () => {
-  const inputs = ['https://bsky.app', '/3jk7x4irgv52r', 'item/test/123']
+  const inputs = ['https://catsky.social', '/3jk7x4irgv52r', 'item/test/123']
   const outputs = [
-    'https://bsky.app',
-    'https://bsky.app/3jk7x4irgv52r',
-    'https://bsky.app/item/test/123',
+    'https://catsky.social',
+    'https://catsky.social/3jk7x4irgv52r',
+    'https://catsky.social/item/test/123',
   ]
 
   it('appends https, when not present', () => {

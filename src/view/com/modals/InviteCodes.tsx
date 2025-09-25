@@ -2,19 +2,20 @@ import React from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
+  type TextStyle,
   TouchableOpacity,
   View,
+  type ViewStyle,
 } from 'react-native'
 import {setStringAsync} from 'expo-clipboard'
-import {ComAtprotoServerDefs} from '@atproto/api'
+import {type ComAtprotoServerDefs} from '@atproto/api'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {makeProfileLink} from '#/lib/routes/links'
 import {cleanError} from '#/lib/strings/errors'
@@ -22,9 +23,11 @@ import {isWeb} from '#/platform/detection'
 import {useInvitesAPI, useInvitesState} from '#/state/invites'
 import {useModalControls} from '#/state/modals'
 import {
-  InviteCodesQueryResponse,
+  type InviteCodesQueryResponse,
   useInviteCodesQuery,
 } from '#/state/queries/invites'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
 import {Link} from '../util/Link'
@@ -50,7 +53,8 @@ export function Component() {
 }
 
 export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -59,11 +63,28 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
     closeModal()
   }, [closeModal])
 
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const viewStyleLight: ViewStyle = {
+    backgroundColor: theme.palette.contrast_25,
+  }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const borderStyle: ViewStyle = {
+    borderColor: theme.palette.contrast_100,
+  }
+
   if (invites.all.length === 0) {
     return (
-      <View style={[styles.container, pal.view]} testID="inviteCodesModal">
-        <View style={[styles.empty, pal.viewLight]}>
-          <Text type="lg" style={[pal.text, styles.emptyText]}>
+      <View style={[styles.container, viewStyle]} testID="inviteCodesModal">
+        <View style={[styles.empty, viewStyleLight]}>
+          <Text type="lg" style={[textStyle, styles.emptyText]}>
             <Trans>
               You don't have any invite codes yet! We'll send you some when
               you've been on Bluesky for a little longer.
@@ -89,16 +110,16 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   }
 
   return (
-    <View style={[styles.container, pal.view]} testID="inviteCodesModal">
-      <Text type="title-xl" style={[styles.title, pal.text]}>
-        <Trans>Invite a Friend</Trans>
+    <View style={[styles.container, viewStyle]} testID="inviteCodesModal">
+      <Text type="title-xl" style={[styles.title, textStyle]}>
+        <Trans>Invite a Friend </Trans>
       </Text>
-      <Text type="lg" style={[styles.description, pal.text]}>
+      <Text type="lg" style={[styles.description, textStyle]}>
         <Trans>
           Each code works once. You'll receive more invite codes periodically.
         </Trans>
       </Text>
-      <ScrollView style={[styles.scrollContainer, pal.border]}>
+      <ScrollView style={[styles.scrollContainer, borderStyle]}>
         {invites.available.map((invite, i) => (
           <InviteCode
             testID={`inviteCode-${i}`}
@@ -142,7 +163,8 @@ function InviteCode({
   used?: boolean
   invites: InviteCodesQueryResponse
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const invitesState = useInvitesState()
   const {setInviteCopied} = useInvitesAPI()
@@ -154,10 +176,22 @@ function InviteCode({
     setInviteCopied(invite.code)
   }, [setInviteCopied, invite, _])
 
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleLight: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const borderStyle: ViewStyle = {
+    borderColor: theme.palette.contrast_100,
+  }
+
   return (
     <View
       style={[
-        pal.border,
+        borderStyle,
         {borderBottomWidth: 1, paddingHorizontal: 20, paddingVertical: 14},
       ]}>
       <TouchableOpacity
@@ -174,19 +208,19 @@ function InviteCode({
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}
-          style={used ? [pal.textLight, styles.strikeThrough] : pal.text}>
+          style={used ? [textStyleLight, styles.strikeThrough] : textStyle}>
           {invite.code}
         </Text>
         <View style={styles.flex1} />
         {!used && invitesState.copiedInvites.includes(invite.code) && (
-          <Text style={[pal.textLight, styles.codeCopied]}>
+          <Text style={[textStyleLight, styles.codeCopied]}>
             <Trans>Copied</Trans>
           </Text>
         )}
         {!used && (
           <FontAwesomeIcon
             icon={['far', 'clone']}
-            style={pal.text as FontAwesomeIconStyle}
+            style={textStyle as FontAwesomeIconStyle}
           />
         )}
       </TouchableOpacity>
@@ -197,7 +231,7 @@ function InviteCode({
             gap: 8,
             paddingTop: 6,
           }}>
-          <Text style={pal.text}>
+          <Text style={textStyle}>
             <Trans>Used by:</Trans>{' '}
             {uses.map((use, i) => (
               <Link
@@ -206,8 +240,11 @@ function InviteCode({
                 style={{
                   flexDirection: 'row',
                 }}>
-                <UserInfoText did={use.usedBy} style={pal.link} />
-                {i !== uses.length - 1 && <Text style={pal.text}>, </Text>}
+                <UserInfoText
+                  did={use.usedBy}
+                  style={{color: theme.palette.primary_500}}
+                />
+                {i !== uses.length - 1 && <Text style={textStyle}>, </Text>}
               </Link>
             ))}
           </Text>

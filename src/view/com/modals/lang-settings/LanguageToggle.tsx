@@ -1,8 +1,8 @@
 import {StyleSheet} from 'react-native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {toPostLanguages, useLanguagePrefs} from '#/state/preferences/languages'
 import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
+import {useTheme} from '#/alf'
 
 export function LanguageToggle({
   code2,
@@ -15,7 +15,7 @@ export function LanguageToggle({
   onPress: () => void
   langType: 'contentLanguages' | 'postLanguages'
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const langPrefs = useLanguagePrefs()
 
   const values =
@@ -35,7 +35,11 @@ export function LanguageToggle({
       label={name}
       isSelected={isSelected}
       onPress={isDisabled ? undefined : onPress}
-      style={[pal.border, styles.languageToggle, isDisabled && styles.dimmed]}
+      style={[
+        {borderColor: theme.palette.contrast_100},
+        styles.languageToggle,
+        isDisabled && styles.dimmed,
+      ]}
     />
   )
 }

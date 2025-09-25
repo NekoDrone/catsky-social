@@ -1,2 +1,5 @@
 [*.{kt,kts}]
 indent_size=2
+
+[*.{ts,tsx,css}]
+indent_size=2

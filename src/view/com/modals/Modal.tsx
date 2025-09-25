@@ -1,10 +1,11 @@
 import {Fragment, useEffect, useRef} from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, type ViewStyle} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@discord/bottom-sheet/src'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useModalControls, useModals} from '#/state/modals'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {FullWindowOverlay} from '#/components/FullWindowOverlay'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import * as CreateOrEditListModal from './CreateOrEditList'
@@ -20,8 +21,14 @@ export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
   const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const activeModal = activeModals[activeModals.length - 1]
+
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
@@ -65,7 +72,7 @@ export function ModalsContainer() {
 
   if (snapPoints[0] === 'fullscreen') {
     return (
-      <SafeAreaView style={[styles.fullscreenContainer, pal.view]}>
+      <SafeAreaView style={[styles.fullscreenContainer, viewStyle]}>
         {element}
       </SafeAreaView>
     )
@@ -86,9 +93,12 @@ export function ModalsContainer() {
         backdropComponent={
           isModalActive ? createCustomBackdrop(onClose) : undefined
         }
-        handleIndicatorStyle={{backgroundColor: pal.text.color}}
-        handleStyle={[styles.handle, pal.view]}
-        backgroundStyle={pal.view}
+        handleIndicatorStyle={{
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.black : theme.palette.white,
+        }}
+        handleStyle={[styles.handle, viewStyle]}
+        backgroundStyle={viewStyle}
         onChange={onBottomSheetChange}>
         {element}
       </BottomSheet>

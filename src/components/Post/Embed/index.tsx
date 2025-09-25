@@ -11,7 +11,6 @@ import {
 import {Trans} from '@lingui/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {unstableCacheProfileView} from '#/state/queries/profile'
@@ -176,14 +175,14 @@ function RecordEmbed({
     case 'post_not_found': {
       return (
         <PostPlaceholderText>
-          <Trans>Deleted</Trans>
+          <Trans>Deleted </Trans>
         </PostPlaceholderText>
       )
     }
     case 'post_blocked': {
       return (
         <PostPlaceholderText>
-          <Trans>Blocked</Trans>
+          <Trans>Blocked </Trans>
         </PostPlaceholderText>
       )
     }
@@ -209,9 +208,9 @@ export function PostDetachedEmbed({
   return (
     <PostPlaceholderText>
       {isViewerOwner ? (
-        <Trans>Removed by you</Trans>
+        <Trans> Removed by you </Trans>
       ) : (
-        <Trans>Removed by author</Trans>
+        <Trans>Removed by author </Trans>
       )}
     </PostPlaceholderText>
   )
@@ -247,7 +246,6 @@ export function QuoteEmbed({
 
   const t = useTheme()
   const queryClient = useQueryClient()
-  const pal = usePalette('default')
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
@@ -287,7 +285,7 @@ export function QuoteEmbed({
             {!active && <SubtleWebHover hover={hover} style={[a.rounded_md]} />}
             <Link
               style={[!active && a.p_md]}
-              hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+              hoverStyle={{borderColor: t.palette.contrast_300}}
               href={itemHref}
               title={itemTitle}
               onBeforePress={onBeforePress}>

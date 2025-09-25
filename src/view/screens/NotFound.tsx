@@ -8,17 +8,19 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as Layout from '#/components/Layout'
 
 export const NotFoundScreen = () => {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -43,10 +45,30 @@ export const NotFoundScreen = () => {
     <Layout.Screen testID="notFoundView">
       <ViewHeader title={_(msg`Page Not Found`)} />
       <View style={styles.container}>
-        <Text type="title-2xl" style={[pal.text, s.mb10]}>
-          <Trans>Page not found</Trans>
+        <Text
+          type="title-2xl"
+          style={[
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            },
+            s.mb10,
+          ]}>
+          <Trans>Page not found </Trans>
         </Text>
-        <Text type="md" style={[pal.text, s.mb10]}>
+        <Text
+          type="md"
+          style={[
+            {
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            },
+            s.mb10,
+          ]}>
           <Trans>
             We're sorry! We can't find the page you were looking for.
           </Trans>

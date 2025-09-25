@@ -2,10 +2,11 @@ import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Modal as ModalIface} from '#/state/modals'
 import {useModalControls, useModals} from '#/state/modals'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as CreateOrEditListModal from './CreateOrEditList'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as InviteCodesModal from './InviteCodes'
@@ -30,9 +31,10 @@ export function ModalsContainer() {
 }
 
 function Modal({modal}: {modal: ModalIface}) {
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {isModalActive} = useModals()
   const {closeModal} = useModalControls()
-  const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
   if (!isModalActive) {
@@ -75,8 +77,13 @@ function Modal({modal}: {modal: ModalIface}) {
             style={[
               styles.container,
               isMobile && styles.containerMobile,
-              pal.view,
-              pal.border,
+              {
+                backgroundColor:
+                  colorMode === 'light'
+                    ? theme.palette.white
+                    : theme.palette.black,
+                borderColor: theme.palette.contrast_100,
+              },
             ]}>
             {element}
           </View>

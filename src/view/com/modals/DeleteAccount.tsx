@@ -3,23 +3,25 @@ import {
   ActivityIndicator,
   SafeAreaView,
   StyleSheet,
+  type TextStyle,
   TouchableOpacity,
+  useColorScheme,
   View,
+  type ViewStyle,
 } from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {DM_SERVICE_HEADERS} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {cleanError} from '#/lib/strings/errors'
 import {colors, gradients, s} from '#/lib/styles'
-import {useTheme} from '#/lib/ThemeContext'
 import {isAndroid, isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useAgent, useSession, useSessionApi} from '#/state/session'
 import {atoms as a, useTheme as useNewTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Text as NewText} from '#/components/Typography'
 import {resetToTab} from '../../../Navigation'
@@ -31,15 +33,30 @@ import {ScrollView, TextInput} from './util'
 export const snapPoints = isAndroid ? ['90%'] : ['55%']
 
 export function Component({}: {}) {
-  const pal = usePalette('default')
-  const theme = useTheme()
-  const t = useNewTheme()
+  const theme = useNewTheme()
+  const colorMode = useColorModeTheme()
   const {currentAccount} = useSession()
   const agent = useAgent()
   const {removeAccount} = useSessionApi()
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
+
+  const colorScheme = useColorScheme() ?? 'default'
+
+  const viewStyle: ViewStyle = {
+    backgroundColor:
+      colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+
+  const textStyleLight: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
+
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
   const [password, setPassword] = React.useState<string>('')
@@ -95,12 +112,12 @@ export function Component({}: {}) {
   }
   return (
     <SafeAreaView style={[s.flex1]}>
-      <ScrollView style={[pal.view]} keyboardShouldPersistTaps="handled">
-        <View style={[styles.titleContainer, pal.view]}>
-          <Text type="title-xl" style={[s.textCenter, pal.text]}>
+      <ScrollView style={[viewStyle]} keyboardShouldPersistTaps="handled">
+        <View style={[styles.titleContainer, viewStyle]}>
+          <Text type="title-xl" style={[s.textCenter, textStyle]}>
             <Trans>
               Delete Account{' '}
-              <Text type="title-xl" style={[pal.text, s.bold]}>
+              <Text type="title-xl" style={[textStyle, s.bold]}>
                 "
               </Text>
               <Text
@@ -108,12 +125,12 @@ export function Component({}: {}) {
                 numberOfLines={1}
                 style={[
                   isMobile ? styles.titleMobile : styles.titleDesktop,
-                  pal.text,
+                  textStyle,
                   s.bold,
                 ]}>
                 {currentAccount?.handle}
               </Text>
-              <Text type="title-xl" style={[pal.text, s.bold]}>
+              <Text type="title-xl" style={[textStyle, s.bold]}>
                 "
               </Text>
             </Trans>
@@ -121,7 +138,7 @@ export function Component({}: {}) {
         </View>
         {!isEmailSent ? (
           <>
-            <Text type="lg" style={[styles.description, pal.text]}>
+            <Text type="lg" style={[styles.description, textStyle]}>
               <Trans>
                 For security reasons, we'll need to send a confirmation code to
                 your email address.
@@ -166,7 +183,7 @@ export function Component({}: {}) {
                   accessibilityLabel={_(msg`Cancel account deletion`)}
                   accessibilityHint=""
                   onAccessibilityEscape={onCancel}>
-                  <Text type="button-lg" style={pal.textLight}>
+                  <Text type="button-lg" style={textStyleLight}>
                     <Trans context="action">Cancel</Trans>
                   </Text>
                 </TouchableOpacity>
@@ -182,7 +199,7 @@ export function Component({}: {}) {
                   a.mt_lg,
                   a.p_lg,
                   a.rounded_sm,
-                  t.atoms.bg_contrast_25,
+                  theme.atoms.bg_contrast_25,
                 ]}>
                 <CircleInfo
                   size="md"
@@ -208,7 +225,7 @@ export function Component({}: {}) {
             {/* TODO: Update this label to be more concise */}
             <Text
               type="lg"
-              style={[pal.text, styles.description]}
+              style={[textStyle, styles.description]}
               nativeID="confirmationCode">
               <Trans>
                 Check your inbox for an email with the confirmation code to
@@ -216,10 +233,15 @@ export function Component({}: {}) {
               </Trans>
             </Text>
             <TextInput
-              style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
+              style={[
+                styles.textInput,
+                {borderColor: theme.palette.contrast_200},
+                textStyle,
+                styles.mb20,
+              ]}
               placeholder={_(msg`Confirmation code`)}
-              placeholderTextColor={pal.textLight.color}
-              keyboardAppearance={theme.colorScheme}
+              placeholderTextColor={textStyleLight.color}
+              keyboardAppearance={colorScheme}
               value={confirmCode}
               onChangeText={setConfirmCode}
               accessibilityLabelledBy="confirmationCode"
@@ -230,15 +252,19 @@ export function Component({}: {}) {
             />
             <Text
               type="lg"
-              style={[pal.text, styles.description]}
+              style={[textStyle, styles.description]}
               nativeID="password">
               <Trans>Please enter your password as well:</Trans>
             </Text>
             <TextInput
-              style={[styles.textInput, pal.borderDark, pal.text]}
+              style={[
+                styles.textInput,
+                {borderColor: theme.palette.contrast_200},
+                textStyle,
+              ]}
               placeholder={_(msg`Password`)}
-              placeholderTextColor={pal.textLight.color}
-              keyboardAppearance={theme.colorScheme}
+              placeholderTextColor={textStyleLight.color}
+              keyboardAppearance={colorScheme}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -274,7 +300,7 @@ export function Component({}: {}) {
                   accessibilityLabel={_(msg`Cancel account deletion`)}
                   accessibilityHint={_(msg`Exits account deletion process`)}
                   onAccessibilityEscape={onCancel}>
-                  <Text type="button-lg" style={pal.textLight}>
+                  <Text type="button-lg" style={textStyleLight}>
                     <Trans context="action">Cancel</Trans>
                   </Text>
                 </TouchableOpacity>

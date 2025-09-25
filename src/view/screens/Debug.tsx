@@ -1,15 +1,14 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, type TextStyle, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {s} from '#/lib/styles'
-import {type PaletteColorName, ThemeProvider} from '#/lib/ThemeContext'
+import {ThemeProvider} from '#/lib/ThemeContext'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
@@ -20,6 +19,8 @@ import {Text} from '#/view/com/util/text/Text'
 import * as Toast from '#/view/com/util/Toast'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
@@ -54,7 +55,8 @@ function DebugInner({
   onToggleColorScheme: () => void
 }) {
   const [currentView, setCurrentView] = React.useState<number>(0)
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
 
   const renderItem = (item: any) => {
@@ -84,7 +86,14 @@ function DebugInner({
   const items = [{currentView}]
 
   return (
-    <View style={[s.hContentRegion, pal.view]}>
+    <View
+      style={[
+        s.hContentRegion,
+        {
+          backgroundColor:
+            colorMode === 'light' ? theme.palette.white : theme.palette.black,
+        },
+      ]}>
       <ViewHeader title={_(msg`Debug panel`)} />
       <ViewSelector
         swipeEnabled
@@ -98,10 +107,17 @@ function DebugInner({
 }
 
 function Heading({label}: {label: string}) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+
   return (
     <View style={[s.pt10, s.pb5]}>
-      <Text type="title-lg" style={pal.text}>
+      <Text
+        type="title-lg"
+        style={{
+          color:
+            colorMode === 'light' ? theme.palette.black : theme.palette.white,
+        }}>
         {label}
       </Text>
     </View>
@@ -114,11 +130,7 @@ function BaseView() {
       <Heading label="Typography" />
       <TypographyView />
       <Heading label="Palettes" />
-      <PaletteView palette="default" />
-      <PaletteView palette="primary" />
-      <PaletteView palette="secondary" />
-      <PaletteView palette="inverted" />
-      <PaletteView palette="error" />
+      {/* <PaletteView /> */}
       <Heading label="Empty state" />
       <EmptyStateView />
       <Heading label="Loading placeholders" />
@@ -197,136 +209,152 @@ function NotifsView() {
     </View>
   )
 }
-
-function PaletteView({palette}: {palette: PaletteColorName}) {
-  const defaultPal = usePalette('default')
-  const pal = usePalette(palette)
-  return (
-    <View style={[pal.view, pal.border, s.p10, s.mb5, s.border1]}>
-      <Text style={[pal.text]}>{palette} colors</Text>
-      <Text style={[pal.textLight]}>Light text</Text>
-      <Text style={[pal.link]}>Link text</Text>
-      {palette !== 'default' && (
-        <View style={[defaultPal.view]}>
-          <Text style={[pal.textInverted]}>Inverted text</Text>
-        </View>
-      )}
-    </View>
-  )
-}
+// TODO: provide some way to view all the colours in a given theme.
+// since the concept of a 'palette' is mostly deprecated, we need to rethink this debug screen.
+// function PaletteView() {
+//   const defaultTheme = useTheme()
+//   const currColorMode = useColorModeTheme()
+//   const pal = usePalette(palette)
+//   return (
+//     <View style={[pal.view, pal.border, s.p10, s.mb5, s.border1]}>
+//       <Text style={[pal.text]}> {palette} colors </Text>
+//       <Text style={[pal.textLight]}> Light text </Text>
+//       <Text style={[pal.link]}> Link text </Text>
+//       {palette !== 'default' && (
+//         <View
+//           style={{
+//             backgroundColor:
+//               currColorMode === 'light'
+//                 ? defaultTheme.palette.white
+//                 : defaultTheme.palette.black,
+//           }}>
+//           <Text style={[pal.textInverted]}> Inverted text </Text>
+//         </View>
+//       )}
+//     </View>
+//   )
+// }
 
 function TypographyView() {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
   return (
-    <View style={[pal.view]}>
-      <Text type="2xl-thin" style={[pal.text]}>
+    <View
+      style={{
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
+      }}>
+      <Text type="2xl-thin" style={textStyle}>
         '2xl-thin' lorem ipsum dolor
       </Text>
-      <Text type="2xl" style={[pal.text]}>
+      <Text type="2xl" style={textStyle}>
         '2xl' lorem ipsum dolor
       </Text>
-      <Text type="2xl-medium" style={[pal.text]}>
+      <Text type="2xl-medium" style={textStyle}>
         '2xl-medium' lorem ipsum dolor
       </Text>
-      <Text type="2xl-bold" style={[pal.text]}>
+      <Text type="2xl-bold" style={textStyle}>
         '2xl-bold' lorem ipsum dolor
       </Text>
-      <Text type="2xl-heavy" style={[pal.text]}>
+      <Text type="2xl-heavy" style={textStyle}>
         '2xl-heavy' lorem ipsum dolor
       </Text>
-      <Text type="xl-thin" style={[pal.text]}>
+      <Text type="xl-thin" style={textStyle}>
         'xl-thin' lorem ipsum dolor
       </Text>
-      <Text type="xl" style={[pal.text]}>
+      <Text type="xl" style={textStyle}>
         'xl' lorem ipsum dolor
       </Text>
-      <Text type="xl-medium" style={[pal.text]}>
+      <Text type="xl-medium" style={textStyle}>
         'xl-medium' lorem ipsum dolor
       </Text>
-      <Text type="xl-bold" style={[pal.text]}>
+      <Text type="xl-bold" style={textStyle}>
         'xl-bold' lorem ipsum dolor
       </Text>
-      <Text type="xl-heavy" style={[pal.text]}>
+      <Text type="xl-heavy" style={textStyle}>
         'xl-heavy' lorem ipsum dolor
       </Text>
-      <Text type="lg-thin" style={[pal.text]}>
+      <Text type="lg-thin" style={textStyle}>
         'lg-thin' lorem ipsum dolor
       </Text>
-      <Text type="lg" style={[pal.text]}>
+      <Text type="lg" style={textStyle}>
         'lg' lorem ipsum dolor
       </Text>
-      <Text type="lg-medium" style={[pal.text]}>
+      <Text type="lg-medium" style={textStyle}>
         'lg-medium' lorem ipsum dolor
       </Text>
-      <Text type="lg-bold" style={[pal.text]}>
+      <Text type="lg-bold" style={textStyle}>
         'lg-bold' lorem ipsum dolor
       </Text>
-      <Text type="lg-heavy" style={[pal.text]}>
+      <Text type="lg-heavy" style={textStyle}>
         'lg-heavy' lorem ipsum dolor
       </Text>
-      <Text type="md-thin" style={[pal.text]}>
+      <Text type="md-thin" style={textStyle}>
         'md-thin' lorem ipsum dolor
       </Text>
-      <Text type="md" style={[pal.text]}>
+      <Text type="md" style={textStyle}>
         'md' lorem ipsum dolor
       </Text>
-      <Text type="md-medium" style={[pal.text]}>
+      <Text type="md-medium" style={textStyle}>
         'md-medium' lorem ipsum dolor
       </Text>
-      <Text type="md-bold" style={[pal.text]}>
+      <Text type="md-bold" style={textStyle}>
         'md-bold' lorem ipsum dolor
       </Text>
-      <Text type="md-heavy" style={[pal.text]}>
+      <Text type="md-heavy" style={textStyle}>
         'md-heavy' lorem ipsum dolor
       </Text>
-      <Text type="sm-thin" style={[pal.text]}>
+      <Text type="sm-thin" style={textStyle}>
         'sm-thin' lorem ipsum dolor
       </Text>
-      <Text type="sm" style={[pal.text]}>
+      <Text type="sm" style={textStyle}>
         'sm' lorem ipsum dolor
       </Text>
-      <Text type="sm-medium" style={[pal.text]}>
+      <Text type="sm-medium" style={textStyle}>
         'sm-medium' lorem ipsum dolor
       </Text>
-      <Text type="sm-bold" style={[pal.text]}>
+      <Text type="sm-bold" style={textStyle}>
         'sm-bold' lorem ipsum dolor
       </Text>
-      <Text type="sm-heavy" style={[pal.text]}>
+      <Text type="sm-heavy" style={textStyle}>
         'sm-heavy' lorem ipsum dolor
       </Text>
-      <Text type="xs-thin" style={[pal.text]}>
+      <Text type="xs-thin" style={textStyle}>
         'xs-thin' lorem ipsum dolor
       </Text>
-      <Text type="xs" style={[pal.text]}>
+      <Text type="xs" style={textStyle}>
         'xs' lorem ipsum dolor
       </Text>
-      <Text type="xs-medium" style={[pal.text]}>
+      <Text type="xs-medium" style={textStyle}>
         'xs-medium' lorem ipsum dolor
       </Text>
-      <Text type="xs-bold" style={[pal.text]}>
+      <Text type="xs-bold" style={textStyle}>
         'xs-bold' lorem ipsum dolor
       </Text>
-      <Text type="xs-heavy" style={[pal.text]}>
+      <Text type="xs-heavy" style={textStyle}>
         'xs-heavy' lorem ipsum dolor
       </Text>
 
-      <Text type="title-2xl" style={[pal.text]}>
+      <Text type="title-2xl" style={textStyle}>
         'title-2xl' lorem ipsum dolor
       </Text>
-      <Text type="title-xl" style={[pal.text]}>
+      <Text type="title-xl" style={textStyle}>
         'title-xl' lorem ipsum dolor
       </Text>
-      <Text type="title-lg" style={[pal.text]}>
+      <Text type="title-lg" style={textStyle}>
         'title-lg' lorem ipsum dolor
       </Text>
-      <Text type="title" style={[pal.text]}>
+      <Text type="title" style={textStyle}>
         'title' lorem ipsum dolor
       </Text>
-      <Text type="button" style={[pal.text]}>
+      <Text type="button" style={textStyle}>
         Button
       </Text>
-      <Text type="button-lg" style={[pal.text]}>
-        Button-lg
+      <Text type="button-lg" style={textStyle}>
+        Button - lg
       </Text>
     </View>
   )
@@ -346,10 +374,15 @@ function LoadingPlaceholderView() {
 }
 
 function ButtonsView() {
-  const defaultPal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const buttonStyles = {marginRight: 5}
   return (
-    <View style={[defaultPal.view]}>
+    <View
+      style={{
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
+      }}>
       <View style={[s.flexRow, s.mb5]}>
         <Button type="primary" label="Primary solid" style={buttonStyles} />
         <Button type="secondary" label="Secondary solid" style={buttonStyles} />
@@ -394,12 +427,17 @@ function ButtonsView() {
 }
 
 function ToggleButtonsView() {
-  const defaultPal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const buttonStyles = s.mb5
   const [isSelected, setIsSelected] = React.useState(false)
   const onToggle = () => setIsSelected(!isSelected)
   return (
-    <View style={[defaultPal.view]}>
+    <View
+      style={{
+        backgroundColor:
+          colorMode === 'light' ? theme.palette.white : theme.palette.black,
+      }}>
       <ToggleButton
         type="primary"
         label="Primary solid"

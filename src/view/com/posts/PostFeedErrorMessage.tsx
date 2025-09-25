@@ -9,12 +9,13 @@ import {msg as msgLingui, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as Prompt from '#/components/Prompt'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -94,7 +95,8 @@ function FeedgenErrorMessage({
   rawError?: Error
   savedFeedConfig?: AppBskyActorDefs.SavedFeed
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_: _l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const msg = React.useMemo(
@@ -189,8 +191,8 @@ function FeedgenErrorMessage({
     <>
       <View
         style={[
-          pal.border,
-          pal.viewLight,
+          {borderColor: theme.palette.contrast_100},
+          {backgroundColor: theme.palette.contrast_25},
           {
             borderTopWidth: 1,
             paddingHorizontal: 20,
@@ -198,11 +200,23 @@ function FeedgenErrorMessage({
             gap: 12,
           },
         ]}>
-        <Text style={pal.text}>{msg}</Text>
+        <Text
+          style={{
+            color:
+              colorMode === 'light' ? theme.palette.black : theme.palette.white,
+          }}>
+          {msg}
+        </Text>
 
         {rawError?.message && (
-          <Text style={pal.textLight}>
-            <Trans>Message from server: {rawError.message}</Trans>
+          <Text
+            style={{
+              color:
+                colorMode === 'dark'
+                  ? theme.palette.contrast_600
+                  : theme.palette.contrast_700,
+            }}>
+            <Trans>Message from server: {rawError.message} </Trans>
           </Text>
         )}
 

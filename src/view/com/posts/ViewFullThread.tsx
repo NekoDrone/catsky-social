@@ -5,8 +5,9 @@ import {AtUri} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {makeProfileLink} from '#/lib/routes/links'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {SubtleWebHover} from '#/components/SubtleWebHover'
 import {Link} from '../util/Link'
@@ -18,7 +19,8 @@ export function ViewFullThread({uri}: {uri: string}) {
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const itemHref = React.useMemo(() => {
     const urip = new AtUri(uri)
     return makeProfileLink({did: urip.hostname, handle: ''}, 'post', urip.rkey)
@@ -45,16 +47,25 @@ export function ViewFullThread({uri}: {uri: string}) {
             y1="0"
             x2="2"
             y2="15"
-            stroke={pal.colors.replyLine}
+            stroke={
+              colorMode === 'light'
+                ? theme.palette.contrast_100
+                : theme.palette.contrast_200
+            }
             strokeWidth="2"
           />
-          <Circle cx="2" cy="22" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle cx="2" cy="28" r="1.5" fill={pal.colors.replyLineDot} />
-          <Circle cx="2" cy="34" r="1.5" fill={pal.colors.replyLineDot} />
+          <Circle cx="2" cy="22" r="1.5" fill={theme.palette.contrast_200} />
+          <Circle cx="2" cy="28" r="1.5" fill={theme.palette.contrast_200} />
+          <Circle cx="2" cy="34" r="1.5" fill={theme.palette.contrast_200} />
         </Svg>
       </View>
 
-      <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
+      <Text
+        type="md"
+        style={[
+          {color: theme.palette.primary_500},
+          {paddingTop: 18, paddingBottom: 4},
+        ]}>
         {/* HACKFIX: Trans isn't working after SDK 53 upgrade -sfn */}
         {_(msg`View full thread`)}
       </Text>

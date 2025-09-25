@@ -1,19 +1,18 @@
 import {
-  StyleProp,
+  type StyleProp,
   StyleSheet,
   TouchableOpacity,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {useTheme} from '#/lib/ThemeContext'
+import {useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Text} from '../text/Text'
 
@@ -29,25 +28,30 @@ export function ErrorMessage({
   onPressTryAgain?: () => void
 }) {
   const theme = useTheme()
-  const pal = usePalette('error')
   const {_} = useLingui()
   return (
     <Layout.Center>
-      <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
+      <View
+        testID="errorMessageView"
+        style={[
+          styles.outer,
+          {backgroundColor: theme.palette.negative_300},
+          style,
+        ]}>
         <View
           style={[
             styles.errorIcon,
-            {backgroundColor: theme.palette.error.icon},
+            {backgroundColor: theme.palette.negative_400},
           ]}>
           <FontAwesomeIcon
             icon="exclamation"
-            style={pal.text as FontAwesomeIconStyle}
+            style={{color: theme.palette.negative_400} as FontAwesomeIconStyle}
             size={16}
           />
         </View>
         <Text
           type="sm-medium"
-          style={[styles.message, pal.text]}
+          style={[styles.message, {color: theme.palette.white}]}
           numberOfLines={numberOfLines}>
           {message}
         </Text>
@@ -63,7 +67,7 @@ export function ErrorMessage({
             )}>
             <FontAwesomeIcon
               icon="arrows-rotate"
-              style={{color: theme.palette.error.icon}}
+              style={{color: theme.palette.negative_400}}
               size={18}
             />
           </TouchableOpacity>

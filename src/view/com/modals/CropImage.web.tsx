@@ -6,13 +6,13 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import ReactCrop, {type PercentCrop} from 'react-image-crop'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type PickerImage} from '#/lib/media/picker.shared'
 import {getDataUriSize} from '#/lib/media/util'
 import {gradients, s} from '#/lib/styles'
 import {useModalControls} from '#/state/modals'
 import {Text} from '#/view/com/util/text/Text'
+import {useTheme} from '#/alf'
 
 export const snapPoints = ['0%']
 
@@ -27,7 +27,7 @@ export function Component({
   circular?: boolean
   onSelect: (img?: PickerImage) => void
 }) {
-  const pal = usePalette('default')
+  const theme = useTheme()
   const {_} = useLingui()
 
   const {closeModal} = useModalControls()
@@ -78,7 +78,7 @@ export function Component({
 
   return (
     <View>
-      <View style={[styles.cropper, pal.borderDark]}>
+      <View style={[styles.cropper, {borderColor: theme.palette.contrast_200}]}>
         <ReactCrop
           aspect={aspect}
           crop={crop}
@@ -93,7 +93,7 @@ export function Component({
           accessibilityRole="button"
           accessibilityLabel={_(msg`Cancel image crop`)}
           accessibilityHint={_(msg`Exits image cropping process`)}>
-          <Text type="xl" style={pal.link}>
+          <Text type="xl" style={{color: theme.palette.primary_500}}>
             <Trans>Cancel</Trans>
           </Text>
         </TouchableOpacity>

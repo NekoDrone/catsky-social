@@ -1,10 +1,10 @@
 import React from 'react'
-import {ColorSchemeName, useColorScheme} from 'react-native'
+import {type ColorSchemeName, useColorScheme} from 'react-native'
 
 import {isWeb} from '#/platform/detection'
 import {useThemePrefs} from '#/state/shell'
 import {dark, dim, light} from '#/alf/themes'
-import {ThemeName} from '#/alf/types'
+import {type ThemeName} from '#/alf/types'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
@@ -49,6 +49,7 @@ function updateDocument(theme: ThemeName) {
     // remove any other color mode classes
     html.className = html.className.replace(/(theme)--\w+/g, '')
     html.classList.add(`theme--${theme}`)
+    html.style.backgroundColor = getBackgroundColor(theme)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
   }

@@ -12,6 +12,7 @@
   crowdin-cli,
   typescript,
   typescript-language-server,
+  go,
 
   callPackage,
 }:
@@ -31,6 +32,7 @@ mkShellNoCC {
     crowdin-cli
     typescript
     typescript-language-server
+    go
   ];
 
   shellHook = ''

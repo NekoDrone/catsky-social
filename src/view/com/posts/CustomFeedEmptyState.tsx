@@ -1,24 +1,31 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, type TextStyle, View} from 'react-native'
 import {
   FontAwesomeIcon,
-  FontAwesomeIconStyle,
+  type FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {Trans} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {isWeb} from '#/platform/detection'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Button} from '../util/forms/Button'
 import {Text} from '../util/text/Text'
 
 export function CustomFeedEmptyState() {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const navigation = useNavigation<NavigationProp>()
+  const textStyle: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.black : theme.palette.white,
+  }
+  const textStyleInverted: TextStyle = {
+    color: colorMode === 'light' ? theme.palette.white : theme.palette.black,
+  }
 
   const onPressFindAccounts = React.useCallback(() => {
     if (isWeb) {
@@ -32,9 +39,9 @@ export function CustomFeedEmptyState() {
   return (
     <View style={styles.emptyContainer}>
       <View style={styles.emptyIconContainer}>
-        <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
+        <MagnifyingGlassIcon style={[styles.emptyIcon, textStyle]} size={62} />
       </View>
-      <Text type="xl-medium" style={[s.textCenter, pal.text]}>
+      <Text type="xl-medium" style={[s.textCenter, textStyle]}>
         <Trans>
           This feed is empty! You may need to follow more users or tune your
           language settings.
@@ -44,12 +51,12 @@ export function CustomFeedEmptyState() {
         type="inverted"
         style={styles.emptyBtn}
         onPress={onPressFindAccounts}>
-        <Text type="lg-medium" style={palInverted.text}>
+        <Text type="lg-medium" style={textStyleInverted}>
           <Trans>Find accounts to follow</Trans>
         </Text>
         <FontAwesomeIcon
           icon="angle-right"
-          style={palInverted.text as FontAwesomeIconStyle}
+          style={textStyleInverted as FontAwesomeIconStyle}
           size={14}
         />
       </Button>

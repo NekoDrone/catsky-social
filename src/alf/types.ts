@@ -1,4 +1,4 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
+import {type StyleProp, type TextStyle, type ViewStyle} from 'react-native'
 
 export type TextStyleProp = {
   style?: StyleProp<TextStyle>
@@ -154,6 +154,14 @@ export type ThemedAtoms = {
     shadowOpacity: number
     elevation: number
     shadowColor: string
+  }
+  trending_hot: {
+    color: string
+    backgroundColor: string
+  }
+  trending_new: {
+    color: string
+    backgroundColor: string
   }
 }
 export type Theme = {

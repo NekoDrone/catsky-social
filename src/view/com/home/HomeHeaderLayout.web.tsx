@@ -1,7 +1,8 @@
-import React from 'react'
+import {type JSX} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import type React from 'react'
 
 import {useKawaiiMode} from '#/state/preferences/kawaii'
 import {useSession} from '#/state/session'
@@ -48,7 +49,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
             <View style={{width: 34}} />
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
-              <Logo width={kawaii ? 60 : 28} />
+              <Logo width={kawaii ? 60 : 48} />
             </View>
             <Link
               to="/feeds"

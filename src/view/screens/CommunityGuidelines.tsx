@@ -4,13 +4,17 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {usePalette} from '#/lib/hooks/usePalette'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {TextLink} from '#/view/com/util/Link'
 import {Text} from '#/view/com/util/text/Text'
 import {ScrollView} from '#/view/com/util/Views'
+import {useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import * as Layout from '#/components/Layout'
 import {ViewHeader} from '../com/util/ViewHeader'
 
@@ -19,7 +23,8 @@ type Props = NativeStackScreenProps<
   'CommunityGuidelines'
 >
 export const CommunityGuidelinesScreen = (_props: Props) => {
-  const pal = usePalette('default')
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
 
@@ -32,13 +37,28 @@ export const CommunityGuidelinesScreen = (_props: Props) => {
   return (
     <Layout.Screen>
       <ViewHeader title={_(msg`Community Guidelines`)} />
-      <ScrollView style={[s.hContentRegion, pal.view]}>
+      <ScrollView
+        style={[
+          s.hContentRegion,
+          {
+            backgroundColor:
+              colorMode === 'light' ? theme.palette.white : theme.palette.black,
+          },
+        ]}>
         <View style={[s.p20]}>
-          <Text style={pal.text}>
+          <Text
+            style={{
+              color:
+                colorMode === 'light'
+                  ? theme.palette.black
+                  : theme.palette.white,
+            }}>
             <Trans>
               The Community Guidelines have been moved to{' '}
               <TextLink
-                style={pal.link}
+                style={{
+                  color: theme.palette.primary_500,
+                }}
                 href="https://bsky.social/about/support/community-guidelines"
                 text="bsky.social/about/support/community-guidelines"
               />

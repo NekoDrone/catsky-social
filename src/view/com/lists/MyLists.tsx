@@ -1,23 +1,23 @@
-import React from 'react'
+import React, {type JSX} from 'react'
 import {
   ActivityIndicator,
   FlatList as RNFlatList,
   RefreshControl,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
+import {type AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
+import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
@@ -41,8 +41,8 @@ export function MyLists({
   renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element
   testID?: string
 }) {
-  const pal = usePalette('default')
-  const t = useTheme()
+  const theme = useTheme()
+  const colorMode = useColorModeTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -108,13 +108,13 @@ export function MyLists({
                 a.align_center,
                 a.justify_center,
                 a.rounded_full,
-                t.atoms.bg_contrast_25,
+                theme.atoms.bg_contrast_25,
                 {
                   width: 32,
                   height: 32,
                 },
               ]}>
-              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+              <ListIcon size="md" fill={theme.atoms.text_contrast_low.color} />
             </View>
             <Text
               style={[
@@ -122,7 +122,7 @@ export function MyLists({
                 a.flex_1,
                 a.text_sm,
                 a.leading_snug,
-                t.atoms.text_contrast_medium,
+                theme.atoms.text_contrast_medium,
                 {
                   maxWidth: 200,
                 },
@@ -151,7 +151,7 @@ export function MyLists({
         <View
           style={[
             index !== 0 && a.border_t,
-            t.atoms.border_contrast_low,
+            theme.atoms.border_contrast_low,
             a.px_lg,
             a.py_lg,
           ]}>
@@ -159,7 +159,7 @@ export function MyLists({
         </View>
       )
     },
-    [t, renderItem, error, onRefresh, emptyText],
+    [theme, renderItem, error, onRefresh, emptyText],
   )
 
   if (inline) {
@@ -175,8 +175,16 @@ export function MyLists({
               <RefreshControl
                 refreshing={isPTRing}
                 onRefresh={onRefresh}
-                tintColor={pal.colors.text}
-                titleColor={pal.colors.text}
+                tintColor={
+                  colorMode === 'light'
+                    ? theme.palette.black
+                    : theme.palette.white
+                }
+                titleColor={
+                  colorMode === 'light'
+                    ? theme.palette.black
+                    : theme.palette.white
+                }
               />
             }
             contentContainerStyle={[s.contentContainer]}
