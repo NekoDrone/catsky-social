@@ -8,6 +8,7 @@ import {
   GREEN_HUE,
   RED_HUE,
 } from '#/alf/util/colorGeneration'
+import {fade} from '#/alf/util/colors'
 
 const themes = createThemes({
   hues: {
@@ -115,7 +116,7 @@ export function createThemes({
     red_200: `hsl(${hues.negative}, 91%, 80%)`,
     red_300: `hsl(${hues.negative}, 91%, 70%)`,
     red_400: `hsl(${hues.negative}, 91%, 60%)`,
-    red_500: `hsl(${hues.negative}, 91%, 50%)`,
+    red_500: mocha.red,
     red_600: `hsl(${hues.negative}, 91%, 42%)`,
     red_700: `hsl(${hues.negative}, 91%, 34%)`,
     red_800: `hsl(${hues.negative}, 91%, 26%)`,
@@ -255,8 +256,8 @@ export function createThemes({
 
     contrast_25: mocha.mantle,
     contrast_50: mocha.mantle,
-    contrast_100: `hsl(${hues.primary}, 28%, ${dimScale[3]}%)`,
-    contrast_200: `hsl(${hues.primary}, 28%, ${dimScale[4]}%)`,
+    contrast_100: mocha.surface1,
+    contrast_200: mocha.surface1,
     contrast_300: `hsl(${hues.primary}, 24%, ${dimScale[5]}%)`,
     contrast_400: `hsl(${hues.primary}, 24%, ${dimScale[6]}%)`,
     contrast_500: `hsl(${hues.primary}, 20%, ${dimScale[7]}%)`,
@@ -268,7 +269,7 @@ export function createThemes({
     contrast_975: `hsl(${hues.primary}, 20%, ${dimScale[13]}%)`,
 
     primary_25: `hsl(${hues.primary}, 50%, ${dimScale[1]}%)`,
-    primary_50: `hsl(${hues.primary}, 60%, ${dimScale[2]}%)`,
+    primary_50: fade(accent, 15),
     primary_100: `hsl(${hues.primary}, 70%, ${dimScale[3]}%)`,
     primary_200: `hsl(${hues.primary}, 82%, ${dimScale[4]}%)`,
     primary_300: `hsl(${hues.primary}, 90%, ${dimScale[5]}%)`,
@@ -286,9 +287,9 @@ export function createThemes({
     positive_100: `hsl(${hues.positive}, 70%, ${dimScale[3]}%)`,
     positive_200: `hsl(${hues.positive}, 82%, ${dimScale[4]}%)`,
     positive_300: `hsl(${hues.positive}, 82%, ${dimScale[5]}%)`,
-    positive_400: `hsl(${hues.positive}, 82%, ${dimScale[6]}%)`,
-    positive_500: `hsl(${hues.positive}, 82%, ${dimScale[7]}%)`,
-    positive_600: `hsl(${hues.positive}, 82%, ${dimScale[8]}%)`,
+    positive_400: mocha.green,
+    positive_500: mocha.green,
+    positive_600: mocha.green,
     positive_700: `hsl(${hues.positive}, 82%, ${dimScale[9]}%)`,
     positive_800: `hsl(${hues.positive}, 82%, ${dimScale[10]}%)`,
     positive_900: `hsl(${hues.positive}, 82%, ${dimScale[11]}%)`,
@@ -300,9 +301,9 @@ export function createThemes({
     negative_100: `hsl(${hues.negative}, 84%, ${dimScale[3]}%)`,
     negative_200: `hsl(${hues.negative}, 88%, ${dimScale[4]}%)`,
     negative_300: `hsl(${hues.negative}, 91%, ${dimScale[5]}%)`,
-    negative_400: `hsl(${hues.negative}, 91%, ${dimScale[6]}%)`,
-    negative_500: `hsl(${hues.negative}, 91%, ${dimScale[7]}%)`,
-    negative_600: `hsl(${hues.negative}, 91%, ${dimScale[8]}%)`,
+    negative_400: mocha.red,
+    negative_500: mocha.red,
+    negative_600: mocha.red,
     negative_700: `hsl(${hues.negative}, 91%, ${dimScale[9]}%)`,
     negative_800: `hsl(${hues.negative}, 91%, ${dimScale[10]}%)`,
     negative_900: `hsl(${hues.negative}, 91%, ${dimScale[11]}%)`,
@@ -482,6 +483,15 @@ export function createThemes({
         shadowOpacity: 0.7,
         shadowColor: color.trueBlack,
       },
+      // TODO: probably delete this when we shift to setting CTP colours.
+      trending_hot: {
+        color: '#FFFFFF',
+        backgroundColor: 'red',
+      },
+      trending_new: {
+        color: '#FFFFFF',
+        backgroundColor: 'green',
+      },
     },
   }
 
@@ -572,6 +582,14 @@ export function createThemes({
         ...atoms.shadow_lg,
         shadowOpacity: 0.7,
         shadowColor: `hsl(${hues.primary}, 28%, 6%)`,
+      },
+      trending_hot: {
+        color: mocha.crust,
+        backgroundColor: mocha.red,
+      },
+      trending_new: {
+        color: mocha.crust,
+        backgroundColor: mocha.green,
       },
     },
   }

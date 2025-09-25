@@ -184,18 +184,16 @@ function TrendingIndicator({type}: {type: TrendingIndicatorType | 'skeleton'}) {
     }
     case 'hot': {
       Icon = FlameIcon
-      color =
-        t.scheme === 'light' ? t.palette.negative_500 : t.palette.negative_950
-      backgroundColor =
-        t.scheme === 'light' ? t.palette.negative_50 : t.palette.negative_200
+      color = t.atoms.trending_hot.color
+      backgroundColor = t.atoms.trending_hot.backgroundColor
       text = _(msg`Hot`)
       break
     }
     case 'new': {
       Icon = TrendingIcon
       text = _(msg`New`)
-      color = t.palette.positive_700
-      backgroundColor = t.palette.positive_50
+      color = t.atoms.trending_new.color
+      backgroundColor = t.atoms.trending_new.backgroundColor
       break
     }
     default: {

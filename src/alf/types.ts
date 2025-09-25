@@ -155,6 +155,14 @@ export type ThemedAtoms = {
     elevation: number
     shadowColor: string
   }
+  trending_hot: {
+    color: string
+    backgroundColor: string
+  }
+  trending_new: {
+    color: string
+    backgroundColor: string
+  }
 }
 export type Theme = {
   scheme: 'light' | 'dark' // for library support

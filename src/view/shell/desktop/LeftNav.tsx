@@ -471,7 +471,7 @@ function NavItem({count, hasNew, href, icon, iconFilled, label}: NavItemProps) {
                   top: '-10%',
                   left: count.length === 1 ? 12 : 8,
                   backgroundColor: t.palette.primary_500,
-                  color: t.palette.white,
+                  color: t.palette.black,
                   lineHeight: a.text_sm.fontSize,
                   paddingHorizontal: 4,
                   paddingVertical: 1,

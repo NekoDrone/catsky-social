@@ -604,7 +604,7 @@ function FollowingFeed() {
                 height: 18,
               },
             ]}
-            fill={t.palette.white}
+            fill={t.palette.black}
           />
         </View>
         <FeedCard.TitleAndByline
