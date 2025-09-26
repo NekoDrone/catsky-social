@@ -200,7 +200,7 @@ export function MessageInput({
           ]}
           onPress={onSubmit}
           disabled={needsEmailVerification}>
-          <PaperPlane fill={t.palette.white} style={[a.relative, {left: 1}]} />
+          <PaperPlane fill={t.palette.black} style={[a.relative, {left: 1}]} />
         </Pressable>
       </View>
     </View>
