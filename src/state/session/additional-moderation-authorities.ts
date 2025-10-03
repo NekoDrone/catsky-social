@@ -71,8 +71,10 @@ export function isNonConfigurableModerationAuthority(did: string) {
 
 export function configureAdditionalModerationAuthorities() {
   const geolocation = device.get(['geolocation'])
-  // default to all
-  let additionalLabelers: string[] = MODERATION_AUTHORITIES_DIDS
+  // // default to all
+  // let additionalLabelers: string[] = MODERATION_AUTHORITIES_DIDS
+  // default to none
+  let additionalLabelers: string[] = []
 
   if (geolocation?.countryCode) {
     // overwrite with only those necessary
