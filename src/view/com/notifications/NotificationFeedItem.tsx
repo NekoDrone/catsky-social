@@ -747,7 +747,7 @@ function ExpandListPressable({
       </Pressable>
     )
   } else {
-    return <>{children} </>
+    return <>{children}</>
   }
 }
 
