@@ -29,7 +29,9 @@ export function ProfileHeaderHandle({
       {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_25, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
-            <Trans>Follows you</Trans>
+            <Trans>
+              {profile.viewer?.following ? 'Mutuals' : 'Follows you'}
+            </Trans>
           </Text>
         </View>
       ) : undefined}

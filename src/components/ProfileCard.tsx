@@ -596,6 +596,7 @@ export function Labels({
   const moderation = moderateProfile(profile, moderationOpts)
   const modui = moderation.ui('profileList')
   const followedBy = profile.viewer?.followedBy
+  const following = profile.viewer?.following
 
   if (!followedBy && !modui.inform && !modui.alert) {
     return null
@@ -603,7 +604,7 @@ export function Labels({
 
   return (
     <Pills.Row style={[a.pt_xs]}>
-      {followedBy && <Pills.FollowsYou />}
+      {followedBy && (following ? <Pills.Mutuals /> : <Pills.FollowsYou />)}
       {modui.alerts.map(alert => (
         <Pills.Label key={getModerationCauseKey(alert)} cause={alert} />
       ))}
