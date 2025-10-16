@@ -9,7 +9,6 @@ import {
 
 import {s} from '#/lib/styles'
 import {atoms as a, useTheme} from '#/alf'
-import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Bubble_Stroke2_Corner2_Rounded as Bubble} from '#/components/icons/Bubble'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
@@ -26,7 +25,7 @@ export function LoadingPlaceholder({
   height: DimensionValue | undefined
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
+  const t = useTheme()
   return (
     <View
       style={[
@@ -34,7 +33,7 @@ export function LoadingPlaceholder({
         {
           width,
           height,
-          backgroundColor: theme.palette.contrast_25,
+          backgroundColor: t.palette.contrast_50,
         },
         style,
       ]}
@@ -47,18 +46,9 @@ export function PostLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
-  const colorMode = useColorModeTheme()
+  const t = useTheme()
   return (
-    <View
-      style={[
-        styles.post,
-        {
-          backgroundColor:
-            colorMode === 'light' ? theme.palette.white : theme.palette.black,
-        },
-        style,
-      ]}>
+    <View style={[styles.post, style]}>
       <LoadingPlaceholder
         width={42}
         height={42}
@@ -81,7 +71,7 @@ export function PostLoadingPlaceholder({
               <Bubble
                 style={[
                   {
-                    color: theme.palette.contrast_500,
+                    color: t.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -94,7 +84,7 @@ export function PostLoadingPlaceholder({
               <Repost
                 style={[
                   {
-                    color: theme.palette.contrast_500,
+                    color: t.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -107,7 +97,7 @@ export function PostLoadingPlaceholder({
               <HeartIconOutline
                 style={[
                   {
-                    color: theme.palette.contrast_500,
+                    color: t.palette.contrast_500,
                   },
                   {pointerEvents: 'none'},
                 ]}
@@ -144,20 +134,11 @@ export function NotificationLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
-  const colorMode = useColorModeTheme()
+  const t = useTheme()
   return (
-    <View
-      style={[
-        styles.notification,
-        {
-          backgroundColor:
-            colorMode === 'light' ? theme.palette.white : theme.palette.black,
-        },
-        style,
-      ]}>
+    <View style={[styles.notification, style]}>
       <View style={[{width: 60}, a.align_end, a.pr_sm, a.pt_2xs]}>
-        <HeartIconFilled size="xl" style={{color: theme.palette.contrast_25}} />
+        <HeartIconFilled size="xl" style={{color: t.palette.contrast_50}} />
       </View>
       <View style={{flex: 1}}>
         <View style={[a.flex_row, s.mb10]}>
@@ -197,18 +178,8 @@ export function ProfileCardLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
-  const colorMode = useColorModeTheme()
   return (
-    <View
-      style={[
-        styles.profileCard,
-        {
-          backgroundColor:
-            colorMode === 'light' ? theme.palette.white : theme.palette.black,
-        },
-        style,
-      ]}>
+    <View style={[styles.profileCard, style]}>
       <LoadingPlaceholder
         width={40}
         height={40}
@@ -250,8 +221,7 @@ export function FeedLoadingPlaceholder({
   showTopBorder?: boolean
   showLowerPlaceholder?: boolean
 }) {
-  const theme = useTheme()
-  const colorMode = useColorModeTheme()
+  const t = useTheme()
   return (
     <View
       style={[
@@ -259,17 +229,10 @@ export function FeedLoadingPlaceholder({
           padding: 16,
           borderTopWidth: showTopBorder ? StyleSheet.hairlineWidth : 0,
         },
-        {borderColor: theme.palette.contrast_100},
+        t.atoms.border_contrast_low,
         style,
       ]}>
-      <View
-        style={[
-          {
-            backgroundColor:
-              colorMode === 'light' ? theme.palette.white : theme.palette.black,
-          },
-          {flexDirection: 'row'},
-        ]}>
+      <View style={[{flexDirection: 'row'}]}>
         <LoadingPlaceholder
           width={36}
           height={36}
@@ -312,11 +275,10 @@ export function ChatListItemLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
+  const t = useTheme()
   const random = useMemo(() => Math.random(), [])
   return (
-    <View
-      style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, theme.atoms.bg, style]}>
+    <View style={[a.flex_row, a.gap_md, a.px_lg, a.mt_lg, t.atoms.bg, style]}>
       <LoadingPlaceholder width={52} height={52} style={a.rounded_full} />
       <View>
         <LoadingPlaceholder width={140} height={12} style={a.mt_xs} />

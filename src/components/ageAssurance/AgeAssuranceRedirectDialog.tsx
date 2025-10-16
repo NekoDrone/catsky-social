@@ -159,8 +159,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
               a.pt_lg,
               a.pb_md,
             ]}>
-            <SuccessIcon size="sm" fill={t.palette.positive_600} />
-            <Text style={[a.text_xl, a.font_heavy]}>
+            <SuccessIcon size="sm" fill={t.palette.positive_500} />
+            <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Success</Trans>
             </Text>
           </View>

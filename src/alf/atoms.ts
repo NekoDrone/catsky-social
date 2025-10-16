@@ -5,7 +5,8 @@ import {
   type ViewStyle,
 } from 'react-native'
 
-import * as tokens from '#/alf/tokens'
+import {CARD_ASPECT_RATIO} from '#/lib/constants'
+import {tokens} from '#/alf'
 import {ios, native, platform, web} from '#/alf/util/platform'
 import * as Layout from '#/components/Layout'
 
@@ -129,6 +130,16 @@ export const atoms = {
    */
   bg_transparent: {
     backgroundColor: 'transparent',
+  },
+
+  /**
+   * Aspect ratios
+   */
+  aspect_square: {
+    aspectRatio: 1,
+  },
+  aspect_card: {
+    aspectRatio: CARD_ASPECT_RATIO,
   },
 
   /*
@@ -1056,7 +1067,7 @@ export const atoms = {
   }),
 
   /*
-   * Animaations
+   * Animations
    */
   fade_in: web({
     animation: 'fadeIn ease-out 0.15s',

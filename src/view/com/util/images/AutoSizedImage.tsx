@@ -205,6 +205,7 @@ export function AutoSizedImage({
         // alt here is what screen readers actually use
         accessibilityLabel={image.alt}
         accessibilityHint={_(msg`Views full image`)}
+        accessibilityRole="button"
         style={[
           a.w_full,
           a.rounded_md,
@@ -227,6 +228,7 @@ export function AutoSizedImage({
           // alt here is what screen readers actually use
           accessibilityLabel={image.alt}
           accessibilityHint={_(msg`Views full image`)}
+          accessibilityRole="button"
           style={[a.h_full]}>
           {contents}
         </Pressable>

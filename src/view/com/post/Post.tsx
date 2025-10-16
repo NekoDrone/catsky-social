@@ -34,7 +34,7 @@ import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostControls} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as bsky from '#/types/bsky'
 
 export function Post({
@@ -166,7 +166,7 @@ function PostInner({
       onPointerLeave={() => {
         setHover(false)
       }}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -194,7 +194,7 @@ function PostInner({
             childContainerStyle={styles.contentHiderChild}>
             <PostAlerts
               modui={moderation.ui('contentView')}
-              style={[a.py_xs]}
+              style={[a.pb_xs]}
             />
             {richText.text ? (
               <View>
