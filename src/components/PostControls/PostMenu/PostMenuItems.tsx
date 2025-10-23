@@ -19,7 +19,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
-import {useTranslate} from '#/lib/hooks/useTranslate'
+import {useTranslations} from '#/state/translations'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -123,7 +123,7 @@ let PostMenuItems = ({
   const {hidePost} = useHiddenPostsApi()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
-  const translate = useTranslate()
+  const {translatePost, clearTranslation, isTranslated, getTranslation} = useTranslations()
   const navigation = useNavigation<NavigationProp>()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const blockPromptControl = useDialogControl()
@@ -236,23 +236,31 @@ let PostMenuItems = ({
   }
 
   const onPressTranslate = () => {
-    translate(record.text, langPrefs.primaryLanguage)
-
-    if (
-      bsky.dangerousIsType<AppBskyFeedPost.Record>(
-        post.record,
-        AppBskyFeedPost.isRecord,
-      )
-    ) {
-      logger.metric(
-        'translate',
-        {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
-        },
-        {statsig: false},
-      )
+    const postUri = post.uri
+    
+    // Toggle translation: if already translated, show original
+    if (isTranslated(postUri)) {
+      clearTranslation(postUri)
+    } else {
+      // Translate the post asynchronously
+      translatePost(postUri, record.text, langPrefs.primaryLanguage).then(() => {
+        if (
+          bsky.dangerousIsType<AppBskyFeedPost.Record>(
+            post.record,
+            AppBskyFeedPost.isRecord,
+          )
+        ) {
+          logger.metric(
+            'translate',
+            {
+              sourceLanguages: post.record.langs ?? [],
+              targetLanguage: langPrefs.primaryLanguage,
+              textLength: post.record.text.length,
+            },
+            {statsig: false},
+          )
+        }
+      })
     }
   }
 
@@ -473,9 +481,17 @@ let PostMenuItems = ({
             <>
               <Menu.Item
                 testID="postDropdownTranslateBtn"
-                label={_(msg`Translate`)}
+                label={
+                  isTranslated(post.uri)
+                    ? _(msg`Show Original`)
+                    : _(msg`Translate`)
+                }
                 onPress={onPressTranslate}>
-                <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+                <Menu.ItemText>
+                  {isTranslated(post.uri)
+                    ? _(msg`Show Original`)
+                    : _(msg`Translate`)}
+                </Menu.ItemText>
                 <Menu.ItemIcon icon={Translate} position="right" />
               </Menu.Item>
 

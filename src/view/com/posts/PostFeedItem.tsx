@@ -1,5 +1,7 @@
 import {memo, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {StyleSheet, Text, View} from 'react-native'
+import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   type AppBskyActorDefs,
   AppBskyFeedDefs,
@@ -29,6 +31,8 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
+import {useTranslations} from '#/state/translations'
+import {LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {
   buildPostSourceKey,
   setUnstablePostSource,
@@ -426,6 +430,35 @@ let PostContent = ({
   threadgateRecord?: AppBskyFeedThreadgate.Record
 }): React.ReactNode => {
   const {currentAccount} = useSession()
+  const {_} = useLingui()
+  const {getTranslation} = useTranslations()
+  const translation = getTranslation(post.uri)
+  
+  // Create translated RichText if translation is available
+  const displayText = useMemo(() => {
+    if (translation && !translation.isLoading && translation.translatedText) {
+      return new RichTextAPI({
+        text: translation.translatedText,
+        facets: [],
+      })
+    }
+    return richText
+  }, [translation, richText])
+  
+  // Compute language names for translation indicator
+  const translationLanguages = useMemo(() => {
+    if (!translation || translation.isLoading || !translation.translatedText) {
+      return null
+    }
+    
+    const sourceLangName = translation.sourceLanguage 
+      ? LANGUAGES_MAP_CODE2[translation.sourceLanguage]?.name || translation.sourceLanguage
+      : null
+    const targetLangName = LANGUAGES_MAP_CODE2[translation.targetLanguage]?.name || translation.targetLanguage
+    
+    return { sourceLangName, targetLangName }
+  }, [translation])
+  
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -473,12 +506,21 @@ let PostContent = ({
           <RichText
             enableTags
             testID="postText"
-            value={richText}
+            value={displayText}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={[a.flex_1, a.text_md]}
             authorHandle={postAuthor.handle}
             shouldProxyLinks={true}
           />
+          {translationLanguages && (
+            <Text style={[a.text_xs, a.mt_xs, {opacity: 0.6}]}>
+              {translationLanguages.sourceLangName ? (
+                <Trans>Translated from {translationLanguages.sourceLangName} to {translationLanguages.targetLangName}</Trans>
+              ) : (
+                <Trans>Translated to {translationLanguages.targetLangName}</Trans>
+              )}
+            </Text>
+          )}
           {limitLines && (
             <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
           )}
