@@ -12,12 +12,12 @@ import {useLingui} from '@lingui/react'
 
 import {useActorStatus} from '#/lib/actor-status'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useTranslate} from '#/lib/hooks/useTranslate'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {niceDate} from '#/lib/strings/time'
-import {getTranslatorLink, isPostInLanguage} from '#/locale/helpers'
+import {isPostInLanguage} from '#/locale/helpers'
+import {LANGUAGES_MAP_CODE2} from '#/locale/languages'
 import {logger} from '#/logger'
 import {
   POST_TOMBSTONE,
@@ -29,6 +29,7 @@ import {FeedFeedbackProvider, useFeedFeedback} from '#/state/feed-feedback'
 import {useLanguagePrefs} from '#/state/preferences'
 import {type ThreadItem} from '#/state/queries/usePostThread/types'
 import {useSession} from '#/state/session'
+import {useTranslations} from '#/state/translations'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
@@ -48,7 +49,7 @@ import {InlineLinkText, Link} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
-import {type AppModerationCause} from '#/components/Pills'
+import * as Pills from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {PostControls} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -181,12 +182,15 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
   const {currentAccount, hasSession} = useSession()
   const feedFeedback = useFeedFeedback(postSource?.feedSourceInfo, hasSession)
   const formatPostStatCount = useFormatPostStatCount()
+  const {getTranslation} = useTranslations()
 
   const post = postShadow
   const record = item.value.post.record
   const moderation = item.moderation
   const authorShadow = useProfileShadow(post.author)
   const {isActive: live} = useActorStatus(post.author)
+  const translation = getTranslation(post.uri)
+  
   const richText = useMemo(
     () =>
       new RichTextAPI({
@@ -195,6 +199,31 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
       }),
     [record],
   )
+  
+  // Create translated RichText if translation is available
+  const displayText = useMemo(() => {
+    if (translation && !translation.isLoading && translation.translatedText) {
+      return new RichTextAPI({
+        text: translation.translatedText,
+        facets: [],
+      })
+    }
+    return richText
+  }, [translation, richText])
+  
+  // Compute language names for translation indicator
+  const translationLanguages = useMemo(() => {
+    if (!translation || translation.isLoading || !translation.translatedText) {
+      return null
+    }
+    
+    const sourceLangName = translation.sourceLanguage 
+      ? LANGUAGES_MAP_CODE2[translation.sourceLanguage]?.name || translation.sourceLanguage
+      : null
+    const targetLangName = LANGUAGES_MAP_CODE2[translation.targetLanguage]?.name || translation.targetLanguage
+    
+    return { sourceLangName, targetLangName }
+  }, [translation])
 
   const threadRootUri = record.reply?.root?.uri || post.uri
   const authorHref = makeProfileLink(post.author)
@@ -355,15 +384,28 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     <VerificationCheckButton profile={authorShadow} size="md" />
                   </View>
                 </View>
-                <Text
-                  style={[
-                    a.text_md,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}
-                  numberOfLines={1}>
-                  {sanitizeHandle(post.author.handle, '@')}
-                </Text>
+                <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                  <Text
+                    style={[
+                      a.text_md,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}
+                    numberOfLines={1}>
+                    {sanitizeHandle(post.author.handle, '@')}
+                  </Text>
+                  {/* Relationship pills inline with handle */}
+                  {(post.author.viewer?.following && post.author.viewer?.followedBy) ||
+                  post.author.viewer?.followedBy ? (
+                    <>
+                      {post.author.viewer?.following && post.author.viewer?.followedBy ? (
+                        <Pills.Mutuals size="sm" />
+                      ) : post.author.viewer?.followedBy ? (
+                        <Pills.FollowsYou size="sm" />
+                      ) : null}
+                    </>
+                  ) : null}
+                </View>
               </ProfileHoverCard>
             </View>
           </Link>
@@ -387,14 +429,25 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               additionalCauses={additionalPostAlerts}
             />
             {richText?.text ? (
-              <RichText
-                enableTags
-                selectable
-                value={richText}
-                style={[a.flex_1, a.text_lg]}
-                authorHandle={post.author.handle}
-                shouldProxyLinks={true}
-              />
+              <>
+                <RichText
+                  enableTags
+                  selectable
+                  value={displayText}
+                  style={[a.flex_1, a.text_lg]}
+                  authorHandle={post.author.handle}
+                  shouldProxyLinks={true}
+                />
+                {translationLanguages && (
+                  <Text style={[a.text_xs, a.mt_xs, {opacity: 0.6}]}>
+                    {translationLanguages.sourceLangName ? (
+                      <Trans>Translated from {translationLanguages.sourceLangName} to {translationLanguages.targetLangName}</Trans>
+                    ) : (
+                      <Trans>Translated to {translationLanguages.targetLangName}</Trans>
+                    )}
+                  </Text>
+                )}
+              </>
             ) : undefined}
             {post.embed && (
               <View style={[a.py_xs]}>
@@ -527,7 +580,7 @@ function ExpandedPostDetails({
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
-  const translate = useTranslate()
+  const {translatePost, clearTranslation, isTranslated} = useTranslations()
   const isRootPost = !('reply' in post.record)
   const langPrefs = useLanguagePrefs()
 
@@ -543,24 +596,33 @@ function ExpandedPostDetails({
   const onTranslatePress = useCallback(
     (e: GestureResponderEvent) => {
       e.preventDefault()
-      translate(post.record.text || '', langPrefs.primaryLanguage)
-
-      if (
-        bsky.dangerousIsType<AppBskyFeedPost.Record>(
-          post.record,
-          AppBskyFeedPost.isRecord,
-        )
-      ) {
-        logger.metric('translate', {
-          sourceLanguages: post.record.langs ?? [],
-          targetLanguage: langPrefs.primaryLanguage,
-          textLength: post.record.text.length,
+      
+      const postUri = post.uri
+      
+      // Toggle translation: if already translated, show original
+      if (isTranslated(postUri)) {
+        clearTranslation(postUri)
+      } else {
+        // Translate the post asynchronously
+        translatePost(postUri, post.record.text || '', langPrefs.primaryLanguage).then(() => {
+          if (
+            bsky.dangerousIsType<AppBskyFeedPost.Record>(
+              post.record,
+              AppBskyFeedPost.isRecord,
+            )
+          ) {
+            logger.metric('translate', {
+              sourceLanguages: post.record.langs ?? [],
+              targetLanguage: langPrefs.primaryLanguage,
+              textLength: post.record.text.length,
+            })
+          }
         })
       }
 
       return false
     },
-    [translate, langPrefs, post],
+    [translatePost, clearTranslation, isTranslated, langPrefs, post],
   )
 
   return (
@@ -580,16 +642,19 @@ function ExpandedPostDetails({
             </Text>
 
             <InlineLinkText
-              // overridden to open an intent on android, but keep
-              // as anchor tag for accessibility
-              to={getTranslatorLink(
-                post.record.text,
-                langPrefs.primaryLanguage,
-              )}
-              label={_(msg`Translate`)}
+              to="#"
+              label={
+                isTranslated(post.uri)
+                  ? _(msg`Show Original`)
+                  : _(msg`Translate`)
+              }
               style={[a.text_sm]}
               onPress={onTranslatePress}>
-              <Trans>Translate</Trans>
+              {isTranslated(post.uri) ? (
+                <Trans>Show Original</Trans>
+              ) : (
+                <Trans>Translate</Trans>
+              )}
             </InlineLinkText>
           </>
         )}

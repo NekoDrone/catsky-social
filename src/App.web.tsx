@@ -48,8 +48,10 @@ import {Provider as ProgressGuideProvider} from '#/state/shell/progress-guide'
 import {Provider as SelectedFeedProvider} from '#/state/shell/selected-feed'
 import {Provider as StarterPackProvider} from '#/state/shell/starter-pack'
 import {Provider as HiddenRepliesProvider} from '#/state/threadgate-hidden-replies'
+import {TranslationsProvider} from '#/state/translations'
 import * as Toast from '#/view/com/util/Toast'
 import {Shell} from '#/view/shell/index'
+import {navigateToInitialPath} from '#/Navigation'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as ContextMenuProvider} from '#/components/ContextMenu'
@@ -102,6 +104,13 @@ function InnerApp() {
       )
     })
   }, [_])
+
+  // Navigate to initial path after client is ready
+  useEffect(() => {
+    if (isReady && hasCheckedReferrer) {
+      navigateToInitialPath()
+    }
+  }, [isReady, hasCheckedReferrer])
 
   // wait for session to resume
   if (!isReady || !hasCheckedReferrer) return null
@@ -193,21 +202,23 @@ function App() {
       <A11yProvider>
         <SessionProvider>
           <PrefsStateProvider>
-            <I18nProvider>
-              <ShellStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <PortalProvider>
-                        <StarterPackProvider>
-                          <InnerApp />
-                        </StarterPackProvider>
-                      </PortalProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </ShellStateProvider>
-            </I18nProvider>
+            <TranslationsProvider>
+              <I18nProvider>
+                <ShellStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <PortalProvider>
+                          <StarterPackProvider>
+                            <InnerApp />
+                          </StarterPackProvider>
+                        </PortalProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </ShellStateProvider>
+              </I18nProvider>
+            </TranslationsProvider>
           </PrefsStateProvider>
         </SessionProvider>
       </A11yProvider>
