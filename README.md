@@ -4,7 +4,7 @@ Welcome friends! This is the codebase for the Catsky Social app.
 
 Get the app itself:
 
-- **Web: bsky.app**
+- **Web: <a href="https://catsky.social/">catsky.social</a>**
 
 <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/NekoDrone/catsky-social">
 <img src="https://github.com/ImranR98/Obtainium/blob/main/assets/graphics/badge_obtainium.png?raw=true"
