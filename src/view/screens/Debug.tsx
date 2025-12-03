@@ -21,6 +21,7 @@ import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {ViewSelector} from '#/view/com/util/ViewSelector'
 import {useTheme} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 
 const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
@@ -361,7 +362,15 @@ function TypographyView() {
 }
 
 function EmptyStateView() {
-  return <EmptyState icon="bars" message="This is an empty state" />
+  const {_} = useLingui()
+
+  return (
+    <EmptyState
+      icon={HashtagWideIcon}
+      iconSize="2xl"
+      message={_(msg`This is an empty state`)}
+    />
+  )
 }
 
 function LoadingPlaceholderView() {

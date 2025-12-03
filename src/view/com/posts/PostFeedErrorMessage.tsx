@@ -16,6 +16,7 @@ import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
 import {useTheme} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -51,6 +52,7 @@ export function PostFeedErrorMessage({
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
   )
+
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
@@ -69,7 +71,8 @@ export function PostFeedErrorMessage({
   if (knownError === KnownError.Block) {
     return (
       <EmptyState
-        icon="ban"
+        icon={WarningIcon}
+        iconSize="2xl"
         message={_l(msgLingui`Posts hidden`)}
         style={{paddingVertical: 40}}
       />

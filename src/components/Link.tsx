@@ -170,7 +170,7 @@ export function useLink({
               const state = navigation.getState()
               // if screen is not in the current navigator, it means it's
               // most likely a tab screen. note: state can be undefined
-              if (!state?.routeNames.includes(screen)) {
+              if (!state?.routeNames?.includes?.(screen)) {
                 const parent = navigation.getParent()
                 if (
                   parent &&
@@ -301,7 +301,7 @@ export function Link({
   return (
     <Button
       {...rest}
-      style={[a.justify_start, flatten(rest.style)]}
+      style={[a.justify_start, rest.style]}
       role="link"
       accessibilityRole="link"
       href={href}

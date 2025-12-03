@@ -42,6 +42,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {colors} from '#/components/Admonition'
 import {Button} from '#/components/Button'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {CalendarClock_Stroke2_Corner0_Rounded as CalendarClockIcon} from '#/components/icons/CalendarClock'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -50,7 +51,7 @@ import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
-import {PostControls} from '#/components/PostControls'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
@@ -511,6 +512,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
               />
             </FeedFeedbackProvider>
           </View>
+          <DebugFieldDisplay subject={post} />
         </View>
       </View>
     </>
@@ -567,7 +569,7 @@ function ExpandedPostDetails({
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
         <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {niceDate(i18n, post.indexedAt)}
+          {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (
           <WhoCanReply post={post} isThreadAuthor={isThreadAuthor} />
@@ -652,7 +654,7 @@ function BackdatedPostIndicator({post}: {post: AppBskyFeedDefs.PostView}) {
                 a.leading_tight,
                 t.atoms.text_contrast_medium,
               ]}>
-              <Trans>Archived from {niceDate(i18n, createdAt)}</Trans>
+              <Trans>Archived from {niceDate(i18n, createdAt, 'medium')}</Trans>
             </Text>
           </View>
         )}
@@ -722,13 +724,7 @@ export function ThreadItemAnchorSkeleton() {
 
       <Skele.Text style={[a.text_sm, {width: '50%'}]} />
 
-      <Skele.Row style={[a.justify_between]}>
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Pill blend size={24} />
-        <Skele.Circle blend size={24} />
-        <Skele.Circle blend size={24} />
-      </Skele.Row>
+      <PostControlsSkeleton big />
     </View>
   )
 }

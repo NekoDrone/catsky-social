@@ -1,3 +1,4 @@
+import {XRPCError} from '@atproto/xrpc'
 import {t} from '@lingui/macro'
 
 export function cleanError(str: any): string {
@@ -31,6 +32,7 @@ const NETWORK_ERRORS = [
   'Network request failed',
   'Failed to fetch',
   'Load failed',
+  'Upstream service unreachable',
 ]
 
 export function isNetworkError(e: unknown) {
@@ -41,4 +43,24 @@ export function isNetworkError(e: unknown) {
     }
   }
   return false
+}
+
+export function isErrorMaybeAppPasswordPermissions(e: unknown) {
+  if (e instanceof XRPCError && e.error === 'TokenInvalid') {
+    return true
+  }
+  const str = String(e)
+  return str.includes('Bad token scope') || str.includes('Bad token method')
+}
+
+/**
+ * Intended to capture "User cancelled" or "Crop cancelled" errors
+ * that we often get from expo modules such expo-image-crop-tool
+ *
+ * The exact name has changed in the past so let's just see if the string
+ * contains "cancel"
+ */
+export function isCancelledError(e: unknown) {
+  const str = String(e).toLowerCase()
+  return str.includes('cancel')
 }

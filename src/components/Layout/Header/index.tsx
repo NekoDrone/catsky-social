@@ -129,7 +129,6 @@ export function BackButton({onPress, style, ...props}: Partial<ButtonProps>) {
         size="small"
         variant="ghost"
         color="secondary"
-        shape="square"
         onPress={onPressBack}
         hitSlop={HITSLOP_30}
         style={[
@@ -164,7 +163,10 @@ export function MenuButton() {
         shape="square"
         onPress={onPress}
         hitSlop={HITSLOP_30}
-        style={[{marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET}]}>
+        style={[
+          {marginLeft: -BUTTON_VISUAL_ALIGNMENT_OFFSET},
+          a.bg_transparent,
+        ]}>
         <ButtonIcon icon={Menu} size="lg" />
       </Button>
     </Slot>

@@ -50,6 +50,7 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {ENV} from '#/env'
 import * as bsky from '#/types/bsky'
 import {PostFeedReason} from './PostFeedReason'
 
@@ -176,24 +177,18 @@ let FeedItemInner = ({
   const {sendInteraction, feedSourceInfo} = useFeedFeedbackContext()
 
   const onPressReply = () => {
-    if (gate('feed_reply_button_open_thread')) {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#clickthroughItem',
-        feedContext,
-        reqId,
-      })
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#interactionReply',
+      feedContext,
+      reqId,
+    })
+    if (gate('feed_reply_button_open_thread') && ENV !== 'e2e') {
       navigation.navigate('PostThread', {
         name: post.author.did,
         rkey,
       })
     } else {
-      sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext,
-        reqId,
-      })
       openComposer({
         replyTo: {
           uri: post.uri,

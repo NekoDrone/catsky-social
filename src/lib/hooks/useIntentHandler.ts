@@ -1,10 +1,11 @@
 import React from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {
@@ -23,7 +24,7 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useURL()
+  const incomingUrl = Linking.useLinkingURL()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
   const ageAssuranceRedirectDialogControl =
@@ -32,7 +33,12 @@ export function useIntentHandler() {
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
   React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
+    const handleIncomingURL = async (url: string) => {
+      if (isIOS) {
+        // Close in-app browser if it's open (iOS only)
+        await WebBrowser.dismissBrowser().catch(() => {})
+      }
+
       const referrerInfo = Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
         logger.metric('deepLink:referrerReceived', {
@@ -102,6 +108,7 @@ export function useIntentHandler() {
           } else {
             tryApplyUpdate(channel)
           }
+          return
         }
         default: {
           return
